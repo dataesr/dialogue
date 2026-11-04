@@ -2,3 +2,11 @@
 
 - POC V2 in PHP https://github.com/dataesr/dialoguev2-poc
 - POC to choose the form tool https://github.com/dataesr/dialogue-poc
+
+## Technical stack
+- npm
+- DSFR+ https://github.com/dataesr/dsfr-plus
+- React
+- TypeScript
+- vite
+No choice is currently made between axios and fetch.

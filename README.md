@@ -13,3 +13,6 @@
 
 No choice is currently made between axios and fetch.
 
+## SSO
+
+cf. documentation https://kit.dev.dataesr.ovh/ui/app/kit-provider

@@ -88,16 +88,16 @@ jobs:
           namespace: ${{ env.DEPLOYMENT_NAMESPACE }}
           restart: ${{ env.DEPLOYMENT }}
 
-  notify:
-    name: Notification
-    needs: deploy
-    if: always()
-    runs-on: ubuntu-latest
-    steps:
-      - name: 📢 Notify
-        uses: dataesr/mm-notifier-action@v1.0.3
-        with:
-          deployment_url: ${{ env.DEPLOYMENT_URL }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          mattermost_channel: ${{ env.MM_NOTIFICATION_CHANNEL}}
-          mattermost_webhook_url: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
+  # notify:
+  #   name: Notification
+  #   needs: deploy
+  #   if: always()
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: 📢 Notify
+  #       uses: dataesr/mm-notifier-action@v1.0.3
+  #       with:
+  #         deployment_url: ${{ env.DEPLOYMENT_URL }}
+  #         github_token: ${{ secrets.GITHUB_TOKEN }}
+  #         mattermost_channel: ${{ env.MM_NOTIFICATION_CHANNEL}}
+  #         mattermost_webhook_url: ${{ secrets.MATTERMOST_WEBHOOK_URL }}

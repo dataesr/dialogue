@@ -17,11 +17,22 @@ lerna-debug.log*
 *.njsproj
 *.sln
 *.sw?
+.zed
 
 # Claude Code (fichiers personnels)
 .claude/settings.local.json
 CLAUDE.local.md
 
+# Dependencies
 node_modules
+
+# Build
+build
 dist
+
+# Misc
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 *.local

@@ -6,8 +6,9 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:staging": "tsc && vite build --mode staging",
+    "dev": "vite",
     "lint": "eslint .",
     "preview": "vite preview"
   },

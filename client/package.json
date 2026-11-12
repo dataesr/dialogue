@@ -2,6 +2,8 @@
   "name": "client",
   "private": true,
   "version": "0.0.1",
+  "description": "Frontend module of dialogue",
+  "license": "MIT",
   "type": "module",
   "scripts": {
     "dev": "vite",

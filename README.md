@@ -12,7 +12,8 @@
 - React + TypeScript
 - vite https://vite.dev/guide/#scaffolding-your-first-vite-project
 - SurveyJS https://surveyjs.io/
-- node ^22.13.0 || >=24
+- node ^22.18.0 || >=24
+- Express https://expressjs.com/en/5x/starter/installing/
 
 No choice is currently made between axios and fetch.
 
@@ -20,3 +21,16 @@ No choice is currently made between axios and fetch.
 ## SSO
 
 cf. documentation https://kit.dev.dataesr.ovh/ui/app/kit-provider
+
+
+## Install
+
+`npm i`
+
+
+## Run locally
+
+`npm run dev`
+
+Client: http://localhost:5173/
+Server: http://localhost:3000/

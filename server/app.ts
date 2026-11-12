@@ -1,8 +1,15 @@
-import express, { type Express, type Request, type Response } from 'express';
-import path from "path";
+import "dotenv/config"
+import express, { type Express } from "express"
+import path from "path"
 
-const app: Express = express();
+import router from "./src/router.ts"
 
-app.use(express.static(path.join(path.resolve(), "dist")));
+const app: Express = express()
 
-app.listen(3000);
+if (process.env.NODE_ENV !== "development") {
+  app.use(express.static(path.join(path.resolve(), "dist")))
+}
+
+app.use("/api", router)
+
+app.listen(3000)

@@ -34,3 +34,14 @@ cf. documentation https://kit.dev.dataesr.ovh/ui/app/kit-provider
 
 Client: http://localhost:5173/
 Server: http://localhost:3000/
+
+
+## Deployment
+
+The version number follows [semver](https://semver.org/).
+
+To deploy in production, simply run this command from your staging branch :
+
+`npm run deploy:[patch|minor|major]`
+
+⚠️ Obviously, only members of the [dataesr organization](https://github.com/dataesr/) have rights to push on the repo.

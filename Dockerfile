@@ -3,5 +3,5 @@ WORKDIR /app
 COPY package*.json ./
 COPY server ./server
 RUN npm ci --silent
-CMD ["npm", "run", "-w", "server", "start"]
+CMD ["npm", "run", "-w", "server", "dev"]
 EXPOSE 3000

@@ -13,7 +13,7 @@ await client.connect().catch((e) => {
   process.kill(process.pid, "SIGTERM")
 })
 
-logger.info(`Connected to mongo database - Dialogue...`)
+logger.info("Connected to mongo database - Dialogue...")
 const db = client.db(mongoDbName)
 
 export { client, db }

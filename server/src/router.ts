@@ -1,7 +1,7 @@
 import { Router } from "express"
 
-import adminRouter from "./routes/admin/index.ts"
+import adminRoutes from "./routes/admin/index.ts"
 
 const router = Router()
-router.use("/admin", adminRouter)
+router.use(adminRoutes)
 export default router

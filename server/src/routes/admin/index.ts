@@ -1,7 +1,7 @@
 import { Router } from "express"
 
-import campaignsRouter from "./campaigns/index.ts"
+import campaignsRoutes from "./campaigns/index.ts"
 
 const router = Router()
-router.use("/campaigns", campaignsRouter)
+router.use("admin", campaignsRoutes)
 export default router

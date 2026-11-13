@@ -1,32 +1,32 @@
-import { Router } from "express";
+import { Router } from "express"
 
-import { db } from "../../../services/mongo.ts";
-import type { userType } from "../../../types/user.ts";
+import { db } from "../../../services/mongo.ts"
+import type { userType } from "../../../types/user.ts"
 
-const router = Router();
-const dbCollection = "users";
+const router = Router()
+const name = "users"
 
 // /admin/users
 router
-  .route(`/${dbCollection}`)
+  .route(`/${name}`)
   .get(async (_, res) => {
-    const response = await db.collection(dbCollection).find({}).toArray();
-    res.json(response);
+    const response = await db.collection(name).find({}).toArray()
+    res.json(response)
   })
   .post(async (req, res) => {
     const user: Omit<userType, "_id"> = {
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      email: req.body.email,
       createdAt: new Date(),
-      role: "user",
+      email: req.body.email,
+      firstName: req.body.firstName,
       isActive: true,
-    };
-    const response = await db.collection(dbCollection).insertOne(user);
+      lastName: req.body.lastName,
+      role: "user",
+    }
+    const response = await db.collection(name).insertOne(user)
     res.json({
       message: "User successfully added",
       userId: response.insertedId,
-    });
-  });
+    })
+  })
 
-export default router;
+export default router

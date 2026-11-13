@@ -1,7 +1,7 @@
 import { Router } from "express"
 
 import { db } from "../../../services/mongo.ts"
-import type { CampaignType } from "../../../types/index.ts"
+import type { CampaignType } from "../../../types/campaign.ts"
 
 const router = Router()
 const name = "campaigns"
@@ -15,13 +15,10 @@ router.route(`/${name}`)
   .post(async (req, res) => {
     const campaign: CampaignType = {
       name: req.body.name,
-      shortName: req.body?.shortName,
-      status: req.body.status ?? "test",
+      validation: req.body?.validation ?? "none",
     }
-    if (req.body?.startDate) campaign.startDate = req.body.startDate
-    if (req.body?.endDate) campaign.endDate = req.body.endDate
-    if (req.body?.type) campaign.type = req.body.type
-    if (req.body?.validation) campaign.validation = req.body.validation
+    if (req.body?.shortName) campaign.shortName = req.body.shortName
+    if (req.body?.tagline) campaign.tagline = req.body.tagline
     const response = await db.collection(name).insertOne(campaign)
     res.json({
       message: "Campaign successfully added",

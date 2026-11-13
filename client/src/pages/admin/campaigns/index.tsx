@@ -1,13 +1,31 @@
-import { Button, ButtonGroup, Modal, ModalContent, ModalTitle, TextInput, Title } from "@dataesr/dsfr-plus"
+import {
+  Button,
+  ButtonGroup,
+  Modal,
+  ModalContent,
+  ModalTitle,
+  Select,
+  SelectOption,
+  TextInput,
+  Title,
+} from "@dataesr/dsfr-plus"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
 
-import type { CampaignType } from "../../../../../server/src/types/index"
+import type { CampaignType, CampaignValidationType } from "../../../../../server/src/types/campaign"
+
+const VALIDATIONS = [
+  { key: "none", label: "Sans validation" },
+  { key: "declarative", label: "Validation déclarative" },
+  { key: "locking", label: "Validation bloquante" },
+]
 
 export default function AdminCampaigns() {
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const [name, setName] = useState<string>()
   const [shortName, setShortName] = useState<string>()
+  const [tagline, setTagline] = useState<string>()
+  const [validation, setValidation] = useState<CampaignValidationType>("none")
   const queryClient = useQueryClient()
 
   const { data } = useQuery({
@@ -24,7 +42,8 @@ export default function AdminCampaigns() {
     const newCampaign: CampaignType = {
       name: name ?? "",
       shortName,
-      status: "test",
+      tagline,
+      validation: validation ?? "none"
     };
     await fetch("/api/admin/campaigns", {
       body: JSON.stringify(newCampaign),
@@ -37,6 +56,8 @@ export default function AdminCampaigns() {
     setIsOpen(false)
     setName(undefined)
     setShortName(undefined)
+    setTagline(undefined)
+    setValidation("none")
   }
 
   return (
@@ -45,8 +66,28 @@ export default function AdminCampaigns() {
         <ModalTitle>Créer une campagne</ModalTitle>
         <ModalContent>
           <form onSubmit={handleSubmit}>
-            <TextInput label="Name" onChange={(e) => { e.preventDefault(); setName(e.target.value) }} value={name} />
-            <TextInput label="Short name" onChange={(e) => { e.preventDefault(); setShortName(e.target.value) }} value={shortName} />
+            <TextInput
+              hint="2 à 255 caractères"
+              label="Nom"
+              onChange={(e) => { e.preventDefault(); setName(e.target.value) }}
+              value={name}
+              required
+            />
+            <TextInput
+              hint="2 à 64 caractères, ex. « EVE »"
+              label="Nom court"
+              onChange={(e) => { e.preventDefault(); setShortName(e.target.value) }}
+              value={shortName}
+            />
+            <TextInput
+              hint="Facultative"
+              label="Accroche"
+              onChange={(e) => { e.preventDefault(); setTagline(e.target.value) }}
+              value={tagline}
+            />
+            <Select aria-label="Mode de validation" label="Mode de validation" onChange={(e) => setValidation(e.target.value)} value={validation}>
+              {VALIDATIONS.map(({ key, label }) => <SelectOption key={key}>{label}</SelectOption>)}
+            </Select>
             <ButtonGroup isInlineFrom="xs" align="right">
               <Button type="submit">Valider</Button>
             </ButtonGroup>
@@ -60,23 +101,19 @@ export default function AdminCampaigns() {
       <table className="fr-table">
         <thead>
           <tr>
-            <th>_id</th>
-            <th>name</th>
-            <th>shortName</th>
-            <th>status</th>
-            <th>type</th>
-            <th>validation</th>
+            <th>Nom</th>
+            <th>Nom court</th>
+            <th>Accroche</th>
+            <th>Mode de validation</th>
           </tr>
         </thead>
         <tbody>
-          {(data ?? []).map((campaign: CampaignType) => (
-            <tr key={campaign._id}>
-              <td>{campaign._id}</td>
-              <td>{campaign?.name}</td>
+          {(data ?? []).map((campaign: CampaignType, index: string) => (
+            <tr key={`campaign-${index}`}>
+              <td>{campaign.name}</td>
               <td>{campaign?.shortName}</td>
-              <td>{campaign?.status}</td>
-              <td>{campaign?.type}</td>
-              <td>{campaign?.validation}</td>
+              <td>{campaign?.tagline}</td>
+              <td>{campaign.validation}</td>
             </tr>
           ))}
         </tbody>

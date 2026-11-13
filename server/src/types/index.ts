@@ -1,5 +1,5 @@
 export type CampaignType = {
-  _id?: string,
+  // _id?: string,
   // Libellé long et court,
   name: string, //2 à 255 caractères
   shortName?: string, //2 à 64 caractères, ex. « EVE »

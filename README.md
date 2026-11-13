@@ -30,7 +30,7 @@ cf. documentation https://kit.dev.dataesr.ovh/ui/app/kit-provider
 
 ## Run locally
 
-`npm run dev`
+`npm run start`
 
 Client: http://localhost:5173/
 Server: http://localhost:3000/

@@ -53,11 +53,11 @@ export default function AdminCampaigns() {
       method: "POST",
     });
     queryClient.invalidateQueries({ queryKey: ["campaigns"] })
-    setIsOpen(false)
     setName(undefined)
     setShortName(undefined)
     setTagline(undefined)
     setValidation("none")
+    setIsOpen(false)
   }
 
   return (
@@ -85,7 +85,7 @@ export default function AdminCampaigns() {
               onChange={(e) => { e.preventDefault(); setTagline(e.target.value) }}
               value={tagline}
             />
-            <Select aria-label="Mode de validation" label="Mode de validation" onChange={(e) => setValidation(e.target.value)} value={validation}>
+            <Select aria-label="Mode de validation" label="Mode de validation" onChange={(e) => setValidation(e as CampaignValidationType)} value={validation}>
               {VALIDATIONS.map(({ key, label }) => <SelectOption key={key}>{label}</SelectOption>)}
             </Select>
             <ButtonGroup isInlineFrom="xs" align="right">

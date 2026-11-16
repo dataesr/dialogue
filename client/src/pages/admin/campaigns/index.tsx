@@ -21,9 +21,11 @@ const VALIDATIONS = [
 ]
 
 export default function AdminCampaigns() {
+  const [errors, setErrors] = useState<{[key: string]: unknown}>({})
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const [name, setName] = useState<string>()
   const [shortName, setShortName] = useState<string>()
+  const [showErrors, setShowErrors] = useState<boolean>(false)
   const [tagline, setTagline] = useState<string>()
   const [validation, setValidation] = useState<CampaignValidationType>("none")
   const queryClient = useQueryClient()
@@ -38,20 +40,20 @@ export default function AdminCampaigns() {
   })
 
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const newCampaign: CampaignType = {
-      name: name ?? "",
-      shortName,
-      tagline,
-      validation: validation ?? "none"
-    };
+    e.preventDefault()
+    if (!name) {
+      setErrors({ ...errors, name: "Un nom est requis !" })
+      setShowErrors(true)
+      return
+    }
+    const newCampaign: CampaignType = { name, shortName, tagline, validation }
     await fetch("/api/admin/campaigns", {
       body: JSON.stringify(newCampaign),
       headers: {
         "Content-Type": "application/json",
       },
       method: "POST",
-    });
+    })
     queryClient.invalidateQueries({ queryKey: ["campaigns"] })
     setName(undefined)
     setShortName(undefined)
@@ -69,9 +71,13 @@ export default function AdminCampaigns() {
             <TextInput
               hint="2 à 255 caractères"
               label="Nom"
+              maxLength={255}
+              message={(showErrors && errors?.name) ? <>{errors.name}</> : null}
+              messageType={(showErrors && errors?.name) ? "error" : ""}
+              minLength={2}
               onChange={(e) => { e.preventDefault(); setName(e.target.value) }}
-              value={name}
               required
+              value={name}
             />
             <TextInput
               hint="2 à 64 caractères, ex. « EVE »"

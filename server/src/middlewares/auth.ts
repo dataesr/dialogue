@@ -4,9 +4,9 @@ import type { AuthUser } from "../types/identification.ts";
 // TODO: remplacer par la vérification du token SSO
 const FAKE_USER: AuthUser = {
   id: "user1",
-  email: "jerem@domain.com",
-  name: "Jerem",
-  role: "admin",
+  email: "user1@domain.com",
+  name: "User 1",
+  role: "administrator",
 };
 
 export function authMiddleware(req: Request, _res: Response, next: NextFunction) {

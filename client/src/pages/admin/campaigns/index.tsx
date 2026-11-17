@@ -15,22 +15,31 @@ import { useState } from "react"
 import type { CampaignType, CampaignValidationType } from "../../../../../server/src/types/campaign"
 
 const VALIDATIONS = [
+  { key: "", value: "", },
   { key: "none", label: "Sans validation" },
   { key: "declarative", label: "Validation déclarative" },
   { key: "locking", label: "Validation bloquante" },
 ]
 
+type CampaignTypeForm = Omit<CampaignType, "validation"> & {
+    validation: CampaignValidationType | "";
+}
+
 export default function Campaigns() {
-  const [errors, setErrors] = useState<{[key: string]: unknown}>({})
+  const [campaign, setCampaign] = useState<CampaignTypeForm>({ name: "", shortName: "", validation: "" })
+  const [errors, setErrors] = useState<{ [key: string]: unknown }>({})
   const [isOpen, setIsOpen] = useState<boolean>(false)
-  const [name, setName] = useState<string>()
-  const [shortName, setShortName] = useState<string>()
   const [showErrors, setShowErrors] = useState<boolean>(false)
-  const [tagline, setTagline] = useState<string>()
-  const [validation, setValidation] = useState<CampaignValidationType>("none")
   const queryClient = useQueryClient()
 
-  const { data } = useQuery({
+  const closeAndResetForm = () => {
+    setIsOpen(false)
+    setCampaign({ name: "", shortName: "", validation: "" })
+    setErrors({})
+    setShowErrors(false)
+  }
+
+  const { data: campaigns }: { data: CampaignType[] | undefined } = useQuery<CampaignType[]>({
     queryKey: ["campaigns"],
     queryFn: async () => {
       const response = await fetch("/api/admin/campaigns")
@@ -41,57 +50,69 @@ export default function Campaigns() {
 
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault()
-    if (!name) {
-      setErrors({ ...errors, name: "Un nom est requis !" })
+    const errorsTmp: { name?: string, shortName?: string, validation?: string } = {}
+    if (!campaign.name) errorsTmp.name = "Un nom est requis !"
+    if (campaign.name && campaign.name.length < 2) errorsTmp.name = "Le nom doit avoir plus de 2 caractères"
+    if (campaign.name && campaign.name.length > 255) errorsTmp.name = "Le nom doit avoir moins de 255 caractères"
+    if (campaign.shortName && campaign.shortName.length < 2) errorsTmp.shortName = "Le nom court doit avoir plus de 2 caractères"
+    if (campaign.shortName && campaign.shortName.length > 255) errorsTmp.shortName = "Le nom court doit avoir moins de 255 caractères"
+    if (campaign.validation === "") errorsTmp.validation = "Validation ne doit pas être vide"
+    if(Object.keys(errorsTmp).length > 0) {
+      setErrors(errorsTmp)
       setShowErrors(true)
       return
     }
-    const newCampaign: CampaignType = { name, shortName, tagline, validation }
     await fetch("/api/admin/campaigns", {
-      body: JSON.stringify(newCampaign),
+      body: JSON.stringify(campaign),
       headers: {
         "Content-Type": "application/json",
       },
       method: "POST",
     })
     queryClient.invalidateQueries({ queryKey: ["campaigns"] })
-    setName(undefined)
-    setShortName(undefined)
-    setTagline(undefined)
-    setValidation("none")
-    setIsOpen(false)
+    closeAndResetForm()
   }
 
   return (
     <>
-      <Modal isOpen={isOpen} hide={() => setIsOpen(false)}>
+      <Modal isOpen={isOpen} hide={() => closeAndResetForm()}>
         <ModalTitle>Créer une campagne</ModalTitle>
         <ModalContent>
           <form onSubmit={handleSubmit}>
             <TextInput
               hint="2 à 255 caractères"
               label="Nom"
-              maxLength={255}
               message={(showErrors && errors?.name) ? <>{errors.name}</> : null}
-              messageType={(showErrors && errors?.name) ? "error" : ""}
-              minLength={2}
-              onChange={(e) => { e.preventDefault(); setName(e.target.value) }}
+              messageType={(showErrors && errors?.name) ? "error" : null}
+              onChange={(e) => { e.preventDefault(); setCampaign({ ...campaign, name: e.target.value }) }}
               required
-              value={name}
+              value={campaign.name}
+              isOptional
             />
             <TextInput
               hint="2 à 64 caractères, ex. « EVE »"
               label="Nom court"
-              onChange={(e) => { e.preventDefault(); setShortName(e.target.value) }}
-              value={shortName}
+              message={(showErrors && errors?.shortName) ? <>{errors.shortName}</> : null}
+              messageType={(showErrors && errors?.shortName) ? "error" : null}
+              onChange={(e) => { e.preventDefault(); setCampaign({ ...campaign, shortName: e.target.value }) }}
+              value={campaign.shortName}
             />
             <TextInput
               hint="Facultative"
               label="Accroche"
-              onChange={(e) => { e.preventDefault(); setTagline(e.target.value) }}
-              value={tagline}
+              message={(showErrors && errors?.tagline) ? <>{errors.tagline}</> : null}
+              messageType={(showErrors && errors?.tagline) ? "error" : null}
+              onChange={(e) => { e.preventDefault(); setCampaign({ ...campaign, tagline: e.target.value }) }}
+              value={campaign.tagline}
             />
-            <Select aria-label="Mode de validation" label="Mode de validation" onChange={(e) => setValidation(e as CampaignValidationType)} value={validation}>
+            <Select
+              aria-label="Mode de validation"
+              disabledKeys={[""]}
+              label="Mode de validation"
+              onChange={(e) => setCampaign({ ...campaign, validation: e as CampaignValidationType })}
+              value={campaign.validation}
+              isRequired
+            >
               {VALIDATIONS.map(({ key, label }) => <SelectOption key={key}>{label}</SelectOption>)}
             </Select>
             <ButtonGroup isInlineFrom="xs" align="right">
@@ -114,7 +135,7 @@ export default function Campaigns() {
           </tr>
         </thead>
         <tbody>
-          {(data ?? []).map((campaign: CampaignType, index: string) => (
+          {(campaigns ?? []).map((campaign: CampaignType, index: number) => (
             <tr key={`campaign-${index}`}>
               <td><a href={`./campaigns/${campaign._id}`}>{campaign.name}</a></td>
               <td>{campaign?.shortName}</td>

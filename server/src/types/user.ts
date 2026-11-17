@@ -1,6 +1,6 @@
-type userRoles = "admin" | "user"
+type UserRoleType = "admin" | "user"
 
-export type userType = {
+export type UserType = {
   _id?: string
   createdAt?: Date
   email: string
@@ -8,6 +8,6 @@ export type userType = {
   isActive?: boolean
   lastLogin?: Date
   lastName: string
-  role?: userRoles
+  role?: UserRoleType
   updatedAt?: Date
 };

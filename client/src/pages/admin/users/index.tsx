@@ -1,29 +1,29 @@
 import { Button, ButtonGroup, Modal, ModalContent, ModalTitle, TextInput, Title } from "@dataesr/dsfr-plus"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { useState } from "react";
+import { useState } from "react"
 
-import type { userType } from "../../../../../server/src/types/user"
+import type { UserType } from "../../../../../server/src/types/user"
 
 
 export default function Users() {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [userForm, setUserForm] = useState({ firstName: "", lastName: "", email: "" });
-  const queryClient = useQueryClient();
+  const [isOpen, setIsOpen] = useState<boolean>(false)
+  const [userForm, setUserForm] = useState<UserType>({ firstName: "", lastName: "", email: "" })
+  const queryClient = useQueryClient()
 
   const {
     data: users,
     isLoading,
     isError,
-  } = useQuery<userType[]>({
+  } = useQuery<UserType[]>({
     queryKey: ["users"],
     queryFn: async () => {
-      const response = await fetch("/api/admin/users");
+      const response = await fetch("/api/admin/users")
       if (!response.ok) {
-        throw new Error("Impossible de charger les utilisateurs.");
+        throw new Error("Impossible de charger les utilisateurs.")
       }
-      return response.json();
+      return response.json()
     },
-  });
+  })
 
   const addUser = useMutation({
     mutationFn: async (user: typeof userForm) => {
@@ -31,23 +31,23 @@ export default function Users() {
         body: JSON.stringify(user),
         headers: { "Content-Type": "application/json" },
         method: "POST",
-      });
+      })
       if (!response.ok) {
-        throw new Error("Impossible d'ajouter l'utilisateur.");
+        throw new Error("Impossible d'ajouter l'utilisateur.")
       }
-      return response.json();
+      return response.json()
     },
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["users"] });
-      setUserForm({ firstName: "", lastName: "", email: "" });
-      setIsOpen(false);
+      await queryClient.invalidateQueries({ queryKey: ["users"] })
+      setUserForm({ firstName: "", lastName: "", email: "" })
+      setIsOpen(false)
     },
-  });
+  })
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    addUser.mutate(userForm);
-  };
+    e.preventDefault()
+    addUser.mutate(userForm)
+  }
 
   return (
     <>
@@ -71,8 +71,8 @@ export default function Users() {
       <Button
         className="fr-mb-2w"
         onClick={(e) => {
-          e.preventDefault();
-          setIsOpen(true);
+          e.preventDefault()
+          setIsOpen(true)
         }}
       >
         Nouvel utilisateur
@@ -100,7 +100,7 @@ export default function Users() {
           {!isLoading &&
             users &&
             users.length > 0 &&
-            users.map((user: userType) => (
+            users.map((user: UserType) => (
               <tr key={user._id}>
                 <td>{user?.firstName}</td>
                 <td>{user?.lastName}</td>
@@ -116,5 +116,5 @@ export default function Users() {
         </tbody>
       </table>
     </>
-  );
+  )
 }

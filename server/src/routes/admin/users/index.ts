@@ -14,7 +14,7 @@ router
     res.json(response)
   })
   .post(async (req, res) => {
-    const user: Omit<UserType, "_id"> = {
+    const user: UserType = {
       createdAt: new Date(),
       email: req.body.email,
       firstName: req.body.firstName,
@@ -23,9 +23,8 @@ router
       role: "user",
     }
     const response = await db.collection(name).insertOne(user)
-    res.json({
-      message: "User successfully added",
-      userId: response.insertedId,
+    res.status(201).json({
+      message: `User ${user.firstName} ${user.lastName} added. id: ${response.insertedId}`,
     })
   })
 

@@ -1,7 +1,6 @@
 type UserRoleType = "admin" | "user"
 
 export type UserType = {
-  _id?: string
   createdAt?: Date
   email: string
   firstName: string

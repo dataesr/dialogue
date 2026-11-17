@@ -17,7 +17,7 @@ router
     res.json(response)
   })
   .patch(async (req, res) => {
-    const { _id, ...campaign }: CampaignType & { _id: ObjectId } = req.body
+    const { _id, ...campaign }: CampaignType = req.body
     const campaignId = new ObjectId(_id)
     await db.collection(name).updateOne({ _id: campaignId }, { $set: { ...campaign } })
     res.status(200).json({
@@ -27,7 +27,7 @@ router
   .post(async (req, res) => {
     // set defaults for campaign
     const campaignId = new ObjectId()
-    const campaign: CampaignType & { _id: ObjectId } = {
+    const campaign: CampaignType = {
       _id: campaignId,
       name: req.body.name,
       validation: req.body.validation,
@@ -36,7 +36,7 @@ router
     if (req.body?.shortName) campaign.shortName = req.body.shortName
     if (req.body?.tagline) campaign.tagline = req.body.tagline
 
-    // Sauvegarde de la campagne
+    // Save campaign into MongoDB
     await auditedCampaigns.insertOne(campaign)
 
     res.status(201).json({
@@ -45,8 +45,8 @@ router
   })
 
 router.route(`/${name}/:id`).get(async (req, res) => {
-  const id = new ObjectId(req.params.id)
-  const response = await db.collection(name).findOne({ _id: id })
+  const _id = new ObjectId(req.params.id)
+  const response = await db.collection(name).findOne({ _id })
   res.json(response)
 })
 

@@ -45,3 +45,17 @@ To deploy in production, simply run this command from your staging branch :
 `npm run deploy:[patch|minor|major]`
 
 ⚠️ Obviously, only members of the [dataesr organization](https://github.com/dataesr/) have rights to push on the repo.
+
+
+## Wording
+
+- Campagnes -> campaigns
+  - Sans validation -> none
+  - Validation déclarative -> declarative
+  - Validation bloquante -> locking
+- Millésimes -> vintages
+  - Brouillon -> draft
+  - En test -> test
+  - Publiée -> published
+  - Fermée -> closed
+  - Archivée -> archived

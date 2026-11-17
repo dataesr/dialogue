@@ -23,12 +23,12 @@ const VALIDATIONS = [
   { key: "locking", label: "Validation bloquante" },
 ]
 
-type CampaignTypeForm = Omit<CampaignType, "validation"> & {
+type CampaignForm = Omit<CampaignType, "validation"> & {
   validation: CampaignValidationType | "";
 }
 
 export default function Campaigns() {
-  const [campaign, setCampaign] = useState<CampaignTypeForm>({ name: "", validation: "" })
+  const [campaign, setCampaign] = useState<CampaignForm>({ name: "", validation: "" })
   const [errors, setErrors] = useState<{ [key: string]: unknown }>({})
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const [showErrors, setShowErrors] = useState<boolean>(false)

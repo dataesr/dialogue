@@ -9,7 +9,7 @@ const name = "users"
 // /admin/users
 router
   .route(`/${name}`)
-  .get(async (_, res) => {
+  .get(async (_req, res) => {
     const response = await db.collection(name).find({}).toArray()
     res.json(response)
   })

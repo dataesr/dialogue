@@ -44,7 +44,6 @@ export default function CampaignsId() {
   })
 
   const closeAndResetForm = () => {
-    setCampaign({ name: "", validation: "" })
     setErrors({})
     setShowErrors(false)
   }
@@ -68,7 +67,7 @@ export default function CampaignsId() {
       headers: {
         "Content-Type": "application/json",
       },
-      method: "POST",
+      method: "PATCH",
     })
     queryClient.invalidateQueries({ queryKey: ["campaigns"] })
     closeAndResetForm()

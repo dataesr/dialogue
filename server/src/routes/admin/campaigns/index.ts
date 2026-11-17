@@ -12,9 +12,17 @@ const auditedCampaigns = auditedCollection(name)
 // /admin/campaigns
 router
   .route(`/${name}`)
-  .get(async (_, res) => {
+  .get(async (_req, res) => {
     const response = await db.collection(name).find({}).toArray()
     res.json(response)
+  })
+  .patch(async (req, res) => {
+    const { _id, ...campaign }: CampaignType & { _id: ObjectId } = req.body
+    const campaignId = new ObjectId(_id)
+    await db.collection(name).updateOne({ _id: campaignId }, { $set: { ...campaign } })
+    res.status(200).json({
+      message: `Campaign ${campaign.name} added. id: ${_id}`,
+    })
   })
   .post(async (req, res) => {
     // set defaults for campaign
@@ -22,7 +30,7 @@ router
     const campaign: CampaignType & { _id: ObjectId } = {
       _id: campaignId,
       name: req.body.name,
-      validation: req.body?.validation ?? "none",
+      validation: req.body.validation,
     }
     // optional fields
     if (req.body?.shortName) campaign.shortName = req.body.shortName
@@ -32,7 +40,7 @@ router
     await auditedCampaigns.insertOne(campaign)
 
     res.status(201).json({
-      message: `Campaign ${req.body.name} added. id: ${campaignId}`,
+      message: `Campaign ${campaign.name} added. id: ${campaignId}`,
     })
   })
 

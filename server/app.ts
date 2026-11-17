@@ -1,16 +1,27 @@
 import "dotenv/config"
 import express, { type Express } from "express"
-import path from "path"
+import path from "path";
 
+import { runWithContext } from "./src/services/auditContext.ts";
+import { authMiddleware, requireRole } from "./src/middlewares/auth.ts";
 import router from "./src/router.ts"
 
 const app: Express = express()
 
-
 app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
+const apiRoute = "/api";
+app.use(apiRoute, authMiddleware, requireRole("administrator", "reader", "contributor", "top-contributeur", "validator"));
+app.use(apiRoute, (req, _res, next) => {
+  runWithContext(
+    {
+      userId: req.user?.id,
+      userEmail: req.user?.email,
+    },
+    next,
+  );
+});
 
-app.use("/api", router)
+app.use(apiRoute, router);
 
 const distPath = path.resolve(import.meta.dirname, "./dist")
 app.use(express.static(distPath));

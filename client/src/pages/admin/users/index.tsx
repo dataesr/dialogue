@@ -12,8 +12,8 @@ export default function Users() {
 
   const {
     data: users,
-    isLoading,
     isError,
+    isLoading,
   } = useQuery<UserType[]>({
     queryKey: ["users"],
     queryFn: async () => {

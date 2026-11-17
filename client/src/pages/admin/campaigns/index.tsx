@@ -1,4 +1,5 @@
 import {
+  Alert,
   Button,
   ButtonGroup,
   Modal,
@@ -6,6 +7,7 @@ import {
   ModalTitle,
   Select,
   SelectOption,
+  Text,
   TextInput,
   Title,
 } from "@dataesr/dsfr-plus"
@@ -22,24 +24,17 @@ const VALIDATIONS = [
 ]
 
 type CampaignTypeForm = Omit<CampaignType, "validation"> & {
-    validation: CampaignValidationType | "";
+  validation: CampaignValidationType | "";
 }
 
 export default function Campaigns() {
-  const [campaign, setCampaign] = useState<CampaignTypeForm>({ name: "", shortName: "", validation: "" })
+  const [campaign, setCampaign] = useState<CampaignTypeForm>({ name: "", validation: "" })
   const [errors, setErrors] = useState<{ [key: string]: unknown }>({})
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const [showErrors, setShowErrors] = useState<boolean>(false)
   const queryClient = useQueryClient()
 
-  const closeAndResetForm = () => {
-    setIsOpen(false)
-    setCampaign({ name: "", shortName: "", validation: "" })
-    setErrors({})
-    setShowErrors(false)
-  }
-
-  const { data: campaigns }: { data: CampaignType[] | undefined } = useQuery<CampaignType[]>({
+  const { data: campaigns, isError, isLoading } = useQuery<CampaignType[]>({
     queryKey: ["campaigns"],
     queryFn: async () => {
       const response = await fetch("/api/admin/campaigns")
@@ -47,6 +42,13 @@ export default function Campaigns() {
       return response.json()
     }
   })
+
+  const closeAndResetForm = () => {
+    setIsOpen(false)
+    setCampaign({ name: "", validation: "" })
+    setErrors({})
+    setShowErrors(false)
+  }
 
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -57,7 +59,7 @@ export default function Campaigns() {
     if (campaign.shortName && campaign.shortName.length < 2) errorsTmp.shortName = "Le nom court doit avoir plus de 2 caractères"
     if (campaign.shortName && campaign.shortName.length > 255) errorsTmp.shortName = "Le nom court doit avoir moins de 255 caractères"
     if (campaign.validation === "") errorsTmp.validation = "Validation ne doit pas être vide"
-    if(Object.keys(errorsTmp).length > 0) {
+    if (Object.keys(errorsTmp).length > 0) {
       setErrors(errorsTmp)
       setShowErrors(true)
       return
@@ -87,7 +89,6 @@ export default function Campaigns() {
               onChange={(e) => { e.preventDefault(); setCampaign({ ...campaign, name: e.target.value }) }}
               required
               value={campaign.name}
-              isOptional
             />
             <TextInput
               hint="2 à 64 caractères, ex. « EVE »"
@@ -115,6 +116,10 @@ export default function Campaigns() {
             >
               {VALIDATIONS.map(({ key, label }) => <SelectOption key={key}>{label}</SelectOption>)}
             </Select>
+            <>
+              {/* See issue https://github.com/dataesr/dsfr-plus/issues/35 */}
+              {showErrors && errors?.validation && <Alert description={`${errors.validation}`} variant="error" />}
+            </>
             <ButtonGroup isInlineFrom="xs" align="right">
               <Button type="submit">Valider</Button>
             </ButtonGroup>
@@ -125,26 +130,30 @@ export default function Campaigns() {
       <Button className="fr-mb-2w" onClick={(e) => { e.preventDefault(); setIsOpen(true) }}>
         Nouvelle campagne
       </Button>
-      <table className="fr-table">
-        <thead>
-          <tr>
-            <th>Nom</th>
-            <th>Nom court</th>
-            <th>Accroche</th>
-            <th>Mode de validation</th>
-          </tr>
-        </thead>
-        <tbody>
-          {(campaigns ?? []).map((campaign: CampaignType, index: number) => (
-            <tr key={`campaign-${index}`}>
-              <td><a href={`./campaigns/${campaign._id}`}>{campaign.name}</a></td>
-              <td>{campaign?.shortName}</td>
-              <td>{campaign?.tagline}</td>
-              <td>{campaign.validation}</td>
+      {isError && <Alert description="Erreur au chargement des campagnes" variant="error" />}
+      {!isError && isLoading && <Text>Chargement des campagnes...</Text>}
+      {!isError && !isLoading && (
+        <table className="fr-table">
+          <thead>
+            <tr>
+              <th>Nom</th>
+              <th>Nom court</th>
+              <th>Accroche</th>
+              <th>Mode de validation</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {(campaigns ?? []).map((campaign: CampaignType, index: number) => (
+              <tr key={`campaign-${index}`}>
+                <td><a href={`./campaigns/${campaign._id}`}>{campaign.name}</a></td>
+                <td>{campaign?.shortName}</td>
+                <td>{campaign?.tagline}</td>
+                <td>{campaign.validation}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </>
   )
 }

@@ -1,4 +1,5 @@
 import { Router } from "express"
+import { ObjectId } from "mongodb"
 
 import { db } from "../../../services/mongo.ts"
 import type { CampaignType } from "../../../types/campaign.ts"
@@ -24,6 +25,13 @@ router.route(`/${name}`)
       message: "Campaign successfully added",
       campaignId: response.insertedId,
     })
+  })
+
+router.route(`/${name}/:id`)
+  .get(async (req, res) => {
+    const id = new ObjectId(req.params.id);
+    const response = await db.collection(name).findOne({ _id: id })
+    res.json(response)
   })
 
 export default router

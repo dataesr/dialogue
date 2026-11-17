@@ -20,7 +20,7 @@ const VALIDATIONS = [
   { key: "locking", label: "Validation bloquante" },
 ]
 
-export default function AdminCampaigns() {
+export default function Campaigns() {
   const [errors, setErrors] = useState<{[key: string]: unknown}>({})
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const [name, setName] = useState<string>()
@@ -36,7 +36,7 @@ export default function AdminCampaigns() {
       const response = await fetch("/api/admin/campaigns")
       if (!response.ok) throw new Error(`Erreur ${response.status}`)
       return response.json()
-    },
+    }
   })
 
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
@@ -116,7 +116,7 @@ export default function AdminCampaigns() {
         <tbody>
           {(data ?? []).map((campaign: CampaignType, index: string) => (
             <tr key={`campaign-${index}`}>
-              <td>{campaign.name}</td>
+              <td><a href={`./campaigns/${campaign._id}`}>{campaign.name}</a></td>
               <td>{campaign?.shortName}</td>
               <td>{campaign?.tagline}</td>
               <td>{campaign.validation}</td>

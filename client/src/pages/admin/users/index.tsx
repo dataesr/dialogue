@@ -1,10 +1,11 @@
+import { Button, ButtonGroup, Modal, ModalContent, ModalTitle, TextInput, Title } from "@dataesr/dsfr-plus"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { userType } from "../../../../../server/src/types/user";
 
-import { Button, ButtonGroup, Modal, ModalContent, ModalTitle, TextInput, Title } from "@dataesr/dsfr-plus";
+import type { userType } from "../../../../../server/src/types/user"
 
-export default function AdminUsers() {
+
+export default function Users() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [userForm, setUserForm] = useState({ firstName: "", lastName: "", email: "" });
   const queryClient = useQueryClient();

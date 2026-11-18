@@ -113,13 +113,11 @@ export default function Campaigns() {
               onChange={(e) => setCampaign({ ...campaign, validation: e as CampaignValidationType })}
               value={campaign.validation}
               isRequired
+              message={(showErrors && errors?.validation) ? <>{errors.validation}</> : null}
+              messageType={(showErrors && errors?.validation) ? "error" : "valid"}
             >
               {VALIDATIONS.map(({ key, label }) => <SelectOption key={key}>{label}</SelectOption>)}
             </Select>
-            <>
-              {/* See issue https://github.com/dataesr/dsfr-plus/issues/35 */}
-              {showErrors && errors?.validation && <Alert description={`${errors.validation}`} variant="error" />}
-            </>
             <ButtonGroup isInlineFrom="xs" align="right">
               <Button type="submit">Valider</Button>
             </ButtonGroup>

@@ -52,17 +52,17 @@ export default function CampaignsId() {
     e.preventDefault()
     const errorsTmp: { name?: string, shortName?: string, validation?: string } = {}
     if (!campaign.name) errorsTmp.name = "Un nom est requis !"
-    if (campaign.name && campaign.name.length < 2) errorsTmp.name = "Le nom doit avoir plus de 2 caractères"
-    if (campaign.name && campaign.name.length > 255) errorsTmp.name = "Le nom doit avoir moins de 255 caractères"
-    if (campaign.shortName && campaign.shortName.length < 2) errorsTmp.shortName = "Le nom court doit avoir plus de 2 caractères"
-    if (campaign.shortName && campaign.shortName.length > 255) errorsTmp.shortName = "Le nom court doit avoir moins de 255 caractères"
+    if (campaign.name && campaign.name.length < 2) errorsTmp.name = "Le nom doit avoir 2 caractères ou plus"
+    if (campaign.name && campaign.name.length > 255) errorsTmp.name = "Le nom doit avoir strictement moins de 256 caractères"
+    if (campaign.shortName && campaign.shortName.length < 2) errorsTmp.shortName = "Le nom court doit avoir 2 caractères ou plus"
+    if (campaign.shortName && campaign.shortName.length > 64) errorsTmp.shortName = "Le nom doit avoir strictement moins de 65 caractères"
     if (campaign.validation === "") errorsTmp.validation = "Validation ne doit pas être vide"
     if (Object.keys(errorsTmp).length > 0) {
       setErrors(errorsTmp)
       setShowErrors(true)
       return
     }
-    await fetch("/api/admin/campaigns", {
+    await fetch(`/api/admin/campaigns/${id}`, {
       body: JSON.stringify(campaign),
       headers: {
         "Content-Type": "application/json",
@@ -89,7 +89,6 @@ export default function CampaignsId() {
               onChange={(e) => { e.preventDefault(); setCampaign({ ...campaign, name: e.target.value }) }}
               required
               value={campaign.name}
-              isOptional
             />
             <TextInput
               hint="2 à 64 caractères, ex. « EVE »"
@@ -110,12 +109,12 @@ export default function CampaignsId() {
             <Select
               aria-label="Mode de validation"
               disabledKeys={[""]}
+              isRequired
               label="Mode de validation"
               onChange={(e) => setCampaign({ ...campaign, validation: e as CampaignValidationType })}
               value={campaign.validation}
-              isRequired
               message={(showErrors && errors?.validation) ? <>{errors.validation}</> : null}
-              messageType={(showErrors && errors?.validation) ? "error" : "valid"}
+              messageType={(showErrors && errors?.validation) ? "error" : null}
             >
               {VALIDATIONS.map(({ key, label }) => <SelectOption key={key}>{label}</SelectOption>)}
             </Select>

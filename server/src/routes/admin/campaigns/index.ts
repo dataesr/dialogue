@@ -16,25 +16,19 @@ router
     const response = await db.collection(name).find({}).toArray()
     res.json(response)
   })
-  .patch(async (req, res) => {
-    const { _id, ...campaign }: CampaignType = req.body
-    const campaignId = new ObjectId(_id)
-    await db.collection(name).updateOne({ _id: campaignId }, { $set: { ...campaign } })
-    res.status(200).json({
-      message: `Campaign ${campaign.name} added. id: ${_id}`,
-    })
-  })
   .post(async (req, res) => {
-    // set defaults for campaign
     const campaignId = new ObjectId()
     const campaign: CampaignType = {
       _id: campaignId,
       name: req.body.name,
       validation: req.body.validation,
     }
-    // optional fields
     if (req.body?.shortName) campaign.shortName = req.body.shortName
     if (req.body?.tagline) campaign.tagline = req.body.tagline
+    const errors: { name?: string, shortName?: string } = {}
+    if (campaign.name.length < 2 || campaign.name.length > 255) errors.name = "The campaign name should have 2 to 255 characters"
+    if (campaign?.shortName && (campaign.shortName.length < 2 || campaign.shortName.length > 64)) errors.shortName = "The campaign name should have 2 to 255 characters"
+    if (Object.keys(errors).length > 0) return res.status(304).json({ message: Object.values(errors).join(" // ") })
 
     // Save campaign into MongoDB
     await auditedCampaigns.insertOne(campaign)
@@ -44,10 +38,27 @@ router
     })
   })
 
-router.route(`/${name}/:id`).get(async (req, res) => {
-  const _id = new ObjectId(req.params.id)
-  const response = await db.collection(name).findOne({ _id })
-  res.json(response)
-})
+router.route(`/${name}/:id`)
+  .get(async (req, res) => {
+    const _id = new ObjectId(req.params.id)
+    const response = await db.collection(name).findOne({ _id })
+    res.json(response)
+  })
+  .patch(async (req, res) => {
+    const _id = new ObjectId(req.params.id)
+    const { _id: _, ...campaign }: CampaignType = req.body
+    const errors: { name?: string, shortName?: string } = {}
+    if (campaign.name.length < 2 || campaign.name.length > 255) errors.name = "The campaign name should have 2 to 255 characters"
+    if (campaign?.shortName && (campaign.shortName.length < 2 || campaign.shortName.length > 64)) errors.shortName = "The campaign name should have 2 to 255 characters"
+    if (Object.keys(errors).length > 0) return res.status(304).json({ message: Object.values(errors).join(" // ") })
+
+    // Update campaign into MongoDB
+    const campaignId = new ObjectId(_id)
+    await db.collection(name).updateOne({ _id: campaignId }, { $set: { ...campaign } })
+
+    res.status(200).json({
+      message: `Campaign ${campaign.name} modified. id: ${_id}`,
+    })
+  })
 
 export default router

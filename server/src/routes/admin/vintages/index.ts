@@ -16,14 +16,6 @@ router
     const response = await db.collection(name).find({}).toArray()
     res.json(response)
   })
-  .patch(async (req, res) => {
-    const { _id, ...vintage }: VintageType & { _id: ObjectId } = req.body
-    const vintageId = new ObjectId(_id)
-    await db.collection(name).updateOne({ _id: vintageId }, { $set: { ...vintage } })
-    res.status(200).json({
-      message: `Vintage ${vintage.name} added. id: ${_id}`,
-    })
-  })
   .post(async (req, res) => {
     // set defaults for vintage
     const vintageId = new ObjectId()
@@ -44,10 +36,19 @@ router
     })
   })
 
-router.route(`/${name}/:id`).get(async (req, res) => {
-  const _id = new ObjectId(req.params.id)
-  const response = await db.collection(name).findOne({ _id })
-  res.json(response)
-})
+router.route(`/${name}/:id`)
+  .get(async (req, res) => {
+    const _id = new ObjectId(req.params.id)
+    const response = await db.collection(name).findOne({ _id })
+    res.json(response)
+  })
+  .patch(async (req, res) => {
+    const { _id, ...vintage }: VintageType & { _id: ObjectId } = req.body
+    const vintageId = new ObjectId(_id)
+    await db.collection(name).updateOne({ _id: vintageId }, { $set: { ...vintage } })
+    res.status(200).json({
+      message: `Vintage ${vintage.name} modified. id: ${_id}`,
+    })
+  })
 
 export default router

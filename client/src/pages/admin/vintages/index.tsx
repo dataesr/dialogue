@@ -17,7 +17,6 @@ import { useState } from "react"
 import type { VintageType, VintageStatusType } from "../../../../../server/src/types/vintage"
 
 const STATUS = [
-  { key: "", value: "", },
   { key: "draft", label: "Brouillon" },
   { key: "test", label: "En test" },
   { key: "published", label: "Publiée" },
@@ -30,7 +29,7 @@ type VintageForm = Omit<VintageType, "status"> & {
 }
 
 export default function Vintages() {
-  const [vintage, setVintage] = useState<VintageForm>({ name: "", status: "" })
+  const [vintage, setVintage] = useState<VintageForm>({ name: "", status: "draft" })
   const [errors, setErrors] = useState<{ [key: string]: unknown }>({})
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const [showErrors, setShowErrors] = useState<boolean>(false)
@@ -47,7 +46,7 @@ export default function Vintages() {
 
   const closeAndResetForm = () => {
     setIsOpen(false)
-    setVintage({ name: "", status: "" })
+    setVintage({ name: "", status: "draft" })
     setErrors({})
     setShowErrors(false)
   }
@@ -55,11 +54,9 @@ export default function Vintages() {
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault()
     const errorsTmp: { name?: string, shortName?: string, validation?: string } = {}
-    if (!vintage.name) errorsTmp.name = "Un nom est requis !"
+    if (!vintage?.name) errorsTmp.name = "Un nom est requis !"
     if (vintage.name && vintage.name.length < 2) errorsTmp.name = "Le nom doit avoir plus de 2 caractères"
     if (vintage.name && vintage.name.length > 255) errorsTmp.name = "Le nom doit avoir moins de 255 caractères"
-    // if (vintage.shortName && vintage.shortName.length < 2) errorsTmp.shortName = "Le nom court doit avoir plus de 2 caractères"
-    // if (vintage.shortName && vintage.shortName.length > 255) errorsTmp.shortName = "Le nom court doit avoir moins de 255 caractères"
     if (vintage.status === "") errorsTmp.validation = "Status ne doit pas être vide"
     if (Object.keys(errorsTmp).length > 0) {
       setErrors(errorsTmp)
@@ -92,22 +89,18 @@ export default function Vintages() {
               required
               value={vintage.name}
             />
-            {/* <TextInput
-              hint="2 à 64 caractères, ex. « EVE »"
-              label="Nom court"
-              message={(showErrors && errors?.shortName) ? <>{errors.shortName}</> : null}
-              messageType={(showErrors && errors?.shortName) ? "error" : null}
-              onChange={(e) => { e.preventDefault(); setVintage({ ...vintage, shortName: e.target.value }) }}
-              value={vintage.shortName}
+            <TextInput
+              label="Ouverture"
+              onChange={(e) => { e.preventDefault(); setVintage({ ...vintage, closingDate: new Date(e.target.value) }) }}
+              type="datetime-local"
+              value={vintage.openingDate?.toString()}
             />
             <TextInput
-              hint="Facultative"
-              label="Accroche"
-              message={(showErrors && errors?.tagline) ? <>{errors.tagline}</> : null}
-              messageType={(showErrors && errors?.tagline) ? "error" : null}
-              onChange={(e) => { e.preventDefault(); setVintage({ ...vintage, tagline: e.target.value }) }}
-              value={vintage.tagline}
-            /> */}
+              label="Fermeture"
+              onChange={(e) => { e.preventDefault(); setVintage({ ...vintage, closingDate: new Date(e.target.value) }) }}
+              type="datetime-local"
+              value={vintage.closingDate?.toString()}
+            />
             <Select
               aria-label="Statut"
               disabledKeys={[""]}
@@ -139,18 +132,18 @@ export default function Vintages() {
           <thead>
             <tr>
               <th>Nom</th>
-              {/* <th>Nom court</th>
-              <th>Accroche</th> */}
               <th>Statut</th>
+              <th>Ouverture</th>
+              <th>Fermeture</th>
             </tr>
           </thead>
           <tbody>
             {(vintages ?? []).map((vintage: VintageType, index: number) => (
               <tr key={`vintage-${index}`}>
                 <td><a href={`./vintages/${vintage._id}`}>{vintage.name}</a></td>
-                {/* <td>{vintage?.shortName}</td>
-                <td>{vintage?.tagline}</td> */}
-                <td>{vintage.status}</td>
+                <td>{STATUS.find((item) => item.key === vintage.status)?.label ?? "Statut inconnu"}</td>
+                <td>{vintage.openingDate?.toString()}</td>
+                <td>{vintage.closingDate?.toJSON()}</td>
               </tr>
             ))}
           </tbody>

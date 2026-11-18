@@ -9,7 +9,8 @@
     "server"
   ],
   "dependencies": {
-    "concurrently": "^8.0.1"
+    "concurrently": "^8.0.1",
+    "survey-react-ui": "^3.2.7"
   },
   "scripts": {
     "build": "rm -rf server/dist && npm -w client run build -- --emptyOutDir --outDir ../server/dist",

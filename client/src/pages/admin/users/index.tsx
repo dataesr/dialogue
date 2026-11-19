@@ -100,8 +100,8 @@ export default function Users() {
           {!isLoading &&
             users &&
             users.length > 0 &&
-            users.map((user: UserType) => (
-              <tr key={user._id}>
+            users.map((user: UserType, index: number) => (
+              <tr key={`user-${index}`}>
                 <td>{user?.firstName}</td>
                 <td>{user?.lastName}</td>
                 <td>{user?.email}</td>

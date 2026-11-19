@@ -10,7 +10,7 @@ const name = "users"
 router
   .route(`/${name}`)
   .get(async (_req, res) => {
-    const response = await db.collection(name).find({}).toArray()
+    const response = await db.collection(name).find().toArray()
     res.json(response)
   })
   .post(async (req, res) => {

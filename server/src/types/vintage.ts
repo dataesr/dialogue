@@ -4,6 +4,7 @@ export type VintageStatusType = "draft" | "test" | "published" | "closed" | "arc
 
 export type VintageType = {
   _id?: ObjectId
+  campaign_id: ObjectId
   closingDate?: Date
   name: string
   openingDate?: Date

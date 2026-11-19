@@ -48,7 +48,7 @@ export default function LayoutFooter() {
               <a id="footer__bottom-link-8" href="#" className="fr-footer__bottom-link">Gestion des cookies</a>
             </li>
             <li className="fr-footer__bottom-item">
-              <a className="fr-footer__bottom-link" href={`https://github.com/dataesr/tableaux/releases/tag/v${VITE_VERSION}`} title={`v${VITE_VERSION} - Nouvelle fenêtre`} rel="noreferrer noopener external" target="_blank">
+              <a className="fr-footer__bottom-link" href={`https://github.com/dataesr/dialogue/releases/tag/v${VITE_VERSION}`} title={`v${VITE_VERSION} - Nouvelle fenêtre`} rel="noreferrer noopener external" target="_blank">
                 {`v${VITE_VERSION}`}
               </a>
             </li>

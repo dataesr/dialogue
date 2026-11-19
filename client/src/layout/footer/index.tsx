@@ -1,6 +1,6 @@
-import { Logo } from "@dataesr/dsfr-plus";
+import { Logo } from "@dataesr/dsfr-plus"
 
-const { VITE_MINISTER_NAME, VITE_VERSION } = import.meta.env;
+const { VITE_MINISTER_NAME, VITE_VERSION } = import.meta.env
 
 export default function LayoutFooter() {
   return (

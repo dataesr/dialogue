@@ -6,8 +6,13 @@ import {
   TextInput,
 } from "@dataesr/dsfr-plus"
 import { useState } from "react"
+import { useNavigate } from "react-router"
 
 import type { CampaignType, CampaignValidationType } from "../../../../../server/src/types/campaign"
+
+type CampaignForm = Omit<CampaignType, "validation"> & {
+  validation: CampaignValidationType | ""
+}
 
 const CAMPAIGN_VALIDATIONS = [
   { key: "", value: "", },
@@ -16,17 +21,16 @@ const CAMPAIGN_VALIDATIONS = [
   { key: "locking", label: "Validation bloquante" },
 ]
 
-type CampaignForm = Omit<CampaignType, "validation"> & {
-  validation: CampaignValidationType | "";
-}
+const defaultCampaign: CampaignForm = { name: "", validation: "" }
 
-export default function CampaignForm({ id, onSubmit = () => {} }: { id?: string, onSubmit: () => void }) {
-  const [campaign, setCampaign] = useState<CampaignForm>({ name: "", validation: "" })
+export default function CampaignForm({ c, onSubmit = () => { } }: { c?: CampaignForm, onSubmit?: () => void }) {
+  const [campaign, setCampaign] = useState<CampaignForm>(c ?? defaultCampaign)
   const [errors, setErrors] = useState<{ [key: string]: unknown }>({})
   const [showErrors, setShowErrors] = useState<boolean>(false)
+  const navigate = useNavigate()
 
   const resetForm = () => {
-    setCampaign({ name: "", validation: "" })
+    setCampaign(defaultCampaign)
     setErrors({})
     setShowErrors(false)
   }
@@ -34,7 +38,7 @@ export default function CampaignForm({ id, onSubmit = () => {} }: { id?: string,
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault()
     const errorsTmp: { name?: string, shortName?: string, validation?: string } = {}
-    if (!campaign.name) errorsTmp.name = "Un nom est requis !"
+    if (!campaign?.name) errorsTmp.name = "Un nom est requis !"
     if (campaign.name && campaign.name.length < 2) errorsTmp.name = "Le nom doit avoir 2 caractères ou plus"
     if (campaign.name && campaign.name.length > 255) errorsTmp.name = "Le nom doit avoir strictement moins de 256 caractères"
     if (campaign.shortName && campaign.shortName.length < 2) errorsTmp.shortName = "Le nom court doit avoir 2 caractères ou plus"
@@ -45,14 +49,26 @@ export default function CampaignForm({ id, onSubmit = () => {} }: { id?: string,
       setShowErrors(true)
       return
     }
-    await fetch(`/api/admin/campaigns${id ? "/" + id : ""}`, {
+    await fetch(`/api/admin/campaigns${c ? "/" + c._id : ""}`, {
       body: JSON.stringify(campaign),
       headers: {
         "Content-Type": "application/json",
       },
-      method: id ? "PATCH" : "POST",
+      method: c ? "PATCH" : "POST",
     })
     resetForm()
+    onSubmit()
+  }
+
+  const handleDelete = async () => {
+    if (!c) return
+    await fetch(`/api/admin/campaigns/${c._id}`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "DELETE",
+    })
+    navigate(-1)
     onSubmit()
   }
 
@@ -96,6 +112,7 @@ export default function CampaignForm({ id, onSubmit = () => {} }: { id?: string,
         {CAMPAIGN_VALIDATIONS.map(({ key, label }) => <SelectOption key={key}>{label}</SelectOption>)}
       </Select>
       <ButtonGroup isInlineFrom="xs" align="right">
+        {c && <Button onClick={() => handleDelete()} color="error">Supprimer</Button>}
         <Button type="submit">Valider</Button>
       </ButtonGroup>
     </form>

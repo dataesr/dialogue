@@ -21,7 +21,7 @@ const CAMPAIGN_VALIDATIONS = [
 ]
 
 type CampaignForm = Omit<CampaignType, "validation"> & {
-  validation: CampaignValidationType | "";
+  validation: CampaignValidationType | ""
 }
 
 export default function Campaigns() {
@@ -42,7 +42,7 @@ export default function Campaigns() {
       <Modal isOpen={isOpen} hide={() => setIsOpen(false)}>
         <ModalTitle>Créer une campagne</ModalTitle>
         <ModalContent>
-          <CampaignForm onSubmit={() => { queryClient.invalidateQueries({ queryKey: ["campaigns"] }); setIsOpen(false); }} />
+          <CampaignForm onSubmit={() => { queryClient.invalidateQueries({ queryKey: ["campaigns"] }); setIsOpen(false) }} />
         </ModalContent>
       </Modal>
       <Title className="fr-my-3w">Campagnes</Title>

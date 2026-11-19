@@ -1,8 +1,8 @@
+import { Col, Container, Row } from "@dataesr/dsfr-plus"
 import { Outlet } from "react-router-dom"
 
 import Footer from "./footer"
 import Header from "./header"
-import { Col, Container, Row } from "@dataesr/dsfr-plus";
 
 export default function Layout() {
   return (
@@ -17,5 +17,5 @@ export default function Layout() {
       </Container>
       <Footer />
     </>
-  );
+  )
 }

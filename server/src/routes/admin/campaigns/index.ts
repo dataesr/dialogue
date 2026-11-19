@@ -75,6 +75,14 @@ router.route(`/${name}/:id`)
       message: `Campaign ${campaign.name} modified. id: ${_id}`,
     })
   })
+  // TODO: Delete linked vintages
+  .delete(async (req, res) => {
+    const _id = new ObjectId(req.params.id)
+    await db.collection(name).deleteOne({ _id })
+    res.status(200).json({
+      message: `Campaign deleted. id: ${_id}`
+    })
+  })
 
 router.route(`/${name}/:id/vintages`)
   .post(async (req, res) => {

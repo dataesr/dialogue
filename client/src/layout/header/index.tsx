@@ -1,6 +1,6 @@
-import { Header, Logo, Service } from "@dataesr/dsfr-plus";
+import { Header, Logo, Service } from "@dataesr/dsfr-plus"
 
-const { VITE_MINISTER_NAME } = import.meta.env;
+const { VITE_MINISTER_NAME } = import.meta.env
 
 export default function LayoutHeader() {
   return (

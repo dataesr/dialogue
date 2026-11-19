@@ -1,4 +1,4 @@
-import { DSFRConfig } from "@dataesr/dsfr-plus";
+import { DSFRConfig } from "@dataesr/dsfr-plus"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { type ReactNode, StrictMode } from "react"
 import { createRoot } from "react-dom/client"
@@ -10,17 +10,17 @@ import Router from "./router.tsx"
 const queryClient = new QueryClient()
 
 type RouterLinkProps = {
-  children?: ReactNode;
-  href: string;
-  replace?: boolean;
-  target?: "_blank" | "_parent" | "_self" | "_top";
-};
+  children?: ReactNode
+  href: string
+  replace?: boolean
+  target?: "_blank" | "_parent" | "_self" | "_top"
+}
 
 // eslint-disable-next-line react-refresh/only-export-components
 const RouterLink = ({ href, replace, target, ...props }: RouterLinkProps) => {
-  if (target === "_blank") return <a href={href} target={target} {...props} />;
-  return <Link to={href} replace={replace} {...props} />;
-};
+  if (target === "_blank") return <a href={href} target={target} {...props} />
+  return <Link to={href} replace={replace} {...props} />
+}
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

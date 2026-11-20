@@ -21,9 +21,9 @@ export default function Layout() {
         <Service name="Dialogue" tagline="#dialogue, l'outil du MESRE pour structurer les échanges et les contributions des acteurs de l'ESR" />
         <Logo text={VITE_MINISTER_NAME} />
         <Nav id="menu">
-          <Link current={!pathname.startsWith("/admin")} href="/">Campagnes</Link>
-          <Link current={pathname.startsWith("/users")} href="/users">Utilisateurs</Link>
-          <Link current={pathname.startsWith("/builder")} href="/builder">SurveyJS</Link>
+          <Link current={pathname === "/"} href="/">Campagnes</Link>
+          <Link current={pathname === "/users"} href="/users">Utilisateurs</Link>
+          <Link current={pathname === "/builder"} href="/builder">SurveyJS</Link>
         </Nav>
       </Header>
       <Container as="main" id="content">

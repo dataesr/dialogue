@@ -18,7 +18,7 @@ export default function Layout() {
         ]}
       />
       <Header>
-        <Service name="Dialogue" tagline="#dialogue, l'outil du MESRE pour structurer les échanges et les contributions des acteurs de l'ESR" />
+        <Service name="Dialogue" tagline="#dialogue, l'outil du MESRE pour structurer les échanges et les interactions des acteurs de l'ESR" />
         <Logo text={VITE_MINISTER_NAME} />
         <Nav id="menu">
           <Link current={pathname === "/"} href="/">Campagnes</Link>

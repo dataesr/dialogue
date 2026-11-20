@@ -81,7 +81,7 @@ export default function VintageForm({ onSubmit = () => { }, v }: { onSubmit?: ()
       />
       <TextInput
         label="Ouverture"
-        onChange={(e) => { e.preventDefault(); console.log(e.target.value); setVintage({ ...vintage, openingDate: e.target.value }) }}
+        onChange={(e) => { e.preventDefault(); setVintage({ ...vintage, openingDate: e.target.value }) }}
         type="datetime-local"
         value={vintage.openingDate}
       />

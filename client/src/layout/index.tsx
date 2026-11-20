@@ -22,8 +22,8 @@ export default function Layout() {
         <Logo text={VITE_MINISTER_NAME} />
         <Nav id="menu">
           <Link current={pathname === "/"} href="/">Campagnes</Link>
-          <Link current={pathname === "/users"} href="/users">Utilisateurs</Link>
-          <Link current={pathname === "/builder"} href="/builder">SurveyJS</Link>
+          <Link current={pathname === "/utilisateurs"} href="/utilisateurs">Utilisateurs</Link>
+          <Link current={pathname === "/formulaire"} href="/formulaire">Formulaire</Link>
         </Nav>
       </Header>
       <Container as="main" id="content">

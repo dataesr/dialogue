@@ -3,19 +3,19 @@ import { Route, Routes } from "react-router-dom"
 import Layout from "./layout/index.tsx"
 import Builder from "./pages/admin/builder/index.tsx"
 import Campaign from "./pages/admin/campaigns/[id]/index.tsx"
+import Vintage from "./pages/admin/campaigns/[id]/vintages/[id]"
 import Campaigns from "./pages/admin/campaigns/index.tsx"
 import Users from "./pages/admin/users/index.tsx"
-import Vintage from "./pages/admin/vintages/[id]/index.tsx"
 
 export default function Router() {
   return (
     <Routes>
       <Route element={<Layout />}>
         <Route path="/" element={<Campaigns />} />
-        <Route path="/builder" element={<Builder />} />
-        <Route path="/campaigns/:campaignId" element={<Campaign />} />
-        <Route path="/users" element={<Users />} />
-        <Route path="/campaigns/:campaignId/vintages/:vintageId" element={<Vintage />} />
+        <Route path="/campagnes/:campaignId" element={<Campaign />} />
+        <Route path="/campagnes/:campaignId/millesimes/:vintageId" element={<Vintage />} />
+        <Route path="/formulaire" element={<Builder />} />
+        <Route path="/utilisateurs" element={<Users />} />
       </Route>
     </Routes>
   )

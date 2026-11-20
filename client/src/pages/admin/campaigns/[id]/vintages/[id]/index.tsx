@@ -7,7 +7,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
 import { useParams } from "react-router-dom"
 
-import type { VintageType, VintageStatusType } from "../../../../../../server/src/types/vintage"
+import type { VintageType, VintageStatusType } from "../../../../../../../../server/src/types/vintage"
 import VintageForm from "../form"
 
 type VintageTypeForm = Omit<Omit<VintageType, "campaign_id">, "status"> & {
@@ -20,7 +20,7 @@ export default function Vintage() {
   const queryClient = useQueryClient()
 
   const { isError, isLoading } = useQuery({
-    queryKey: ["vintages", vintageId],
+    queryKey: ["campaigns", campaignId, "vintages", vintageId],
     queryFn: async () => {
       const response = await fetch(`/api/admin/campaigns/${campaignId}/vintages/${vintageId}`)
       if (!response.ok) throw new Error(`Erreur ${response.status}`)
@@ -37,7 +37,7 @@ export default function Vintage() {
       {!isError && !isLoading && (
         <>
           <Title className="fr-my-3w">Millésime</Title>
-          <VintageForm onSubmit={() => { queryClient.invalidateQueries({ queryKey: ["campaigns", id] }) }} v={vintage} />
+          <VintageForm onSubmit={() => { queryClient.invalidateQueries({ queryKey: ["campaigns", campaignId, "vintages", vintageId] }) }} v={vintage} />
         </>
       )}
     </>

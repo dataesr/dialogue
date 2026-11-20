@@ -64,7 +64,7 @@ export default function Campaigns() {
           <tbody>
             {(campaigns ?? []).map((campaign: CampaignType, index: number) => (
               <tr key={`campaign-${index}`}>
-                <td><a href={`./campaigns/${campaign._id}`}>{campaign.name}</a></td>
+                <td><a href={`./campagnes/${campaign._id}`}>{campaign.name}</a></td>
                 <td>{campaign?.shortName}</td>
                 <td>{campaign?.tagline}</td>
                 <td>{CAMPAIGN_VALIDATIONS.find((item) => item.key === campaign.validation)?.label ?? "Mode de validation inconnu"}</td>

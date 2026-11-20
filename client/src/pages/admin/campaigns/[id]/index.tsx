@@ -8,7 +8,7 @@ import { useState } from "react"
 import { useParams } from "react-router-dom"
 
 import type { CampaignType, CampaignValidationType } from "../../../../../../server/src/types/campaign"
-import Vintages from "../../vintages"
+import Vintages from "./vintages"
 import CampaignForm from "../form"
 
 type CampaignTypeForm = Omit<CampaignType, "validation"> & {

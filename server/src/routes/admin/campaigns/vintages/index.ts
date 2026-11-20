@@ -39,9 +39,9 @@ router.route(`/${name}`)
     })
   })
 
-router.route(`/${name}/:id`)
+router.route(`/${name}/:vintageId`)
   .get(async (req, res) => {
-    const _id = new ObjectId(req.params.id)
+    const _id = new ObjectId(req.params.vintageId)
     const response = await db.collection(name).aggregate([
       { $match: { _id } },
       { $limit: 1 },
@@ -51,7 +51,7 @@ router.route(`/${name}/:id`)
     res.status(404).json({ message: `No vintage found with id ${_id}` })
   })
   .patch(async (req, res) => {
-    const _id = new ObjectId(req.params.id)
+    const _id = new ObjectId(req.params.vintageId)
     const { _id: _, ...vintage }: VintageType = req.body
     const errors: { name?: string, status?: string } = {}
     if (vintage.name.length < 2 || vintage.name.length > 255) errors.name = "The campaign name should have 2 to 255 characters"
@@ -66,7 +66,7 @@ router.route(`/${name}/:id`)
     })
   })
   .delete(async (req, res) => {
-    const _id = new ObjectId(req.params.id)
+    const _id = new ObjectId(req.params.vintageId)
     await db.collection(name).deleteOne({ _id })
     res.status(200).json({
       message: `Vintage deleted. id: ${_id}`

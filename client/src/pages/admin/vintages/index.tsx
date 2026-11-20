@@ -47,7 +47,7 @@ export default function Vintages({ campaignId, vintages = [] }: { campaignId?: s
         <tbody>
           {(vintages ?? []).map((vintage: VintageType, index: number) => (
             <tr key={`vintage-${index}`}>
-              <td><a href={`../vintages/${vintage._id}`}>{vintage.name}</a></td>
+              <td><a href={`./${campaignId}/vintages/${vintage._id}`}>{vintage.name}</a></td>
               <td>{vintage.openingDate}</td>
               <td>{vintage.closingDate}</td>
               <td>{VINTAGE_STATUS.find((item) => item.key === vintage.status)?.label ?? "Statut inconnu"}</td>

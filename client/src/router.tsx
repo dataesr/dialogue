@@ -13,9 +13,9 @@ export default function Router() {
       <Route element={<Layout />}>
         <Route path="/" element={<Campaigns />} />
         <Route path="/builder" element={<Builder />} />
-        <Route path="/campaigns/:id" element={<Campaign />} />
+        <Route path="/campaigns/:campaignId" element={<Campaign />} />
         <Route path="/users" element={<Users />} />
-        <Route path="/vintages/:id" element={<Vintage />} />
+        <Route path="/campaigns/:campaignId/vintages/:vintageId" element={<Vintage />} />
       </Route>
     </Routes>
   )

@@ -1,32 +1,34 @@
 import { Router } from "express"
 import { ObjectId } from "mongodb"
 
-import { auditedCollection } from "../../../services/auditedCollection.ts"
-import { db } from "../../../services/mongo.ts"
-import type { VintageType } from "../../../types/vintage.ts"
+import { auditedCollection } from "../../../../services/auditedCollection.ts"
+import { db } from "../../../../services/mongo.ts"
+import type { VintageType } from "../../../../types/vintage.ts"
 
 const router = Router()
 const name = "vintages"
 const auditedCampaigns = auditedCollection(name)
 
-// /admin/vintages
-router
-  .route(`/${name}`)
-  .get(async (_req, res) => {
-    const response = await db.collection(name).find().toArray()
+// /admin/campaigns/campaignId/vintages
+router.route(`/${name}`)
+  .get(async (req, res) => {
+    const campaignId = new ObjectId(req.params.campaignId)
+    const response = await db.collection(name).find({ campaign_id: campaignId }).toArray()
     res.json(response)
   })
   .post(async (req, res) => {
+    const campaignId = new ObjectId(req.params.campaignId)
     const vintageId = new ObjectId()
     const vintage: VintageType = {
       _id: vintageId,
+      campaign_id: campaignId,
       name: req.body.name,
       status: req.body.status,
     }
-    if (req.body?.openingDate) vintage.openingDate = req.body.openingDate
     if (req.body?.closingDate) vintage.closingDate = req.body.closingDate
-    const errors: { name?: string, shortName?: string } = {}
-    if (vintage.name.length < 2 || vintage.name.length > 255) errors.name = "The campaign name should have 2 to 255 characters"
+    if (req.body?.openingDate) vintage.openingDate = req.body.openingDate
+    const errors: { name?: string, status?: string } = {}
+    if (vintage.name.length < 2 || vintage.name.length > 255) errors.name = "The vintage name should have 2 to 255 characters"
     if (Object.keys(errors).length > 0) return res.status(304).json({ message: Object.values(errors).join(" // ") })
 
     // Save campaign into MongoDB
@@ -44,7 +46,7 @@ router.route(`/${name}/:id`)
       { $match: { _id } },
       { $limit: 1 },
     ])
-    .toArray()
+      .toArray()
     if (response.length === 1) return res.status(200).json(response[0])
     res.status(404).json({ message: `No vintage found with id ${_id}` })
   })

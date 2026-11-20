@@ -15,14 +15,14 @@ type VintageTypeForm = Omit<Omit<VintageType, "campaign_id">, "status"> & {
 }
 
 export default function Vintage() {
-  const { id } = useParams()
+  const { campaignId, vintageId } = useParams()
   const [vintage, setVintage] = useState<VintageTypeForm>({ name: "", status: "" })
   const queryClient = useQueryClient()
 
   const { isError, isLoading } = useQuery({
-    queryKey: ["campaigns", id],
+    queryKey: ["vintages", vintageId],
     queryFn: async () => {
-      const response = await fetch(`/api/admin/vintages/${id}`)
+      const response = await fetch(`/api/admin/campaigns/${campaignId}/vintages/${vintageId}`)
       if (!response.ok) throw new Error(`Erreur ${response.status}`)
       const campaignTmp = await response.json()
       setVintage(campaignTmp)

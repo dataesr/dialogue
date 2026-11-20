@@ -59,3 +59,26 @@ To deploy in production, simply run this command from your staging branch :
   - Publiée -> published
   - Fermée -> closed
   - Archivée -> archived
+
+
+## Users
+
+cf. Dialogue v1 & POC
+
+5 rôles pour l'administration de Dialogue:
+- lecteur
+- contributeur
+- superviseur niveau 1 (souvent au niveau du rectorat, gestion de la campagne à l'échelle académique donc gère les établissements de la région académique telle que définie par Paysage)
+- superviseur niveau 2 (plutôt le ministère et les MOA des différentes campagnes, donc gère tous les établissements qui participent à la campagne)
+- admin (Yann, Alexandra & Mialy, gestion des codes d'inviation, ajout ou suppression d'utilisateurs de l'administration, gestion des droits de ces utilisateurs ...)
+
+Ces rôles sont uniquement liés à la partie administration de Dialogue. Chaque rôle peut voir la liste des campagnes en cours, en test ou passées de ses espaces. Le rôle de répondant à un millésime d'une campagne est géré différemment.
+
+Espaces
+- millésime x établissement x rôle
+
+1 même établissement peut exister au sein d'espaces différents au sein d'un millésime. Avec donc des rôles différents.
+
+Un code d'invitation peut être saisi dans l'UI de réponse de Dialogue. Paysage assure le lien entre un nom de domaine d'adresse email et une structure (et donc un espace).
+
+Un superviseur peut inviter des utilisateurs avec un rôle lecteur, contributeur ou superviseur.

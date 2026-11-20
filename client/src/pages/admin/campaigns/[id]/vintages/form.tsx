@@ -8,7 +8,7 @@ import {
 import { useState } from "react"
 import { useNavigate } from "react-router"
 
-import type { VintageStatusType, VintageType } from "../../../../../server/src/types/vintage"
+import type { VintageStatusType, VintageType } from "../../../../../../../server/src/types/vintage"
 
 type VintageForm = Omit<VintageType, "campaign_id">
 

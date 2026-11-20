@@ -12,9 +12,9 @@ export default function Router() {
     <Routes>
       <Route element={<Layout />}>
         <Route path="/" element={<Campaigns />} />
-        <Route path="/admin/builder" element={<Builder />} />
-        <Route path="/admin/users" element={<Users />} />
+        <Route path="/builder" element={<Builder />} />
         <Route path="/campaigns/:id" element={<Campaign />} />
+        <Route path="/users" element={<Users />} />
         <Route path="/vintages/:id" element={<Vintage />} />
       </Route>
     </Routes>

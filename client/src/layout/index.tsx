@@ -12,20 +12,21 @@ export default function Layout() {
     <>
       <Skiplinks
         links={[
-          { href: "#contenu", label: "Contenu" },
-          { href: "#header-navigation", label: "Menu" },
+          { href: "#menu", label: "Menu" },
+          { href: "#content", label: "Contenu" },
           { href: "#footer", label: "Pied de page" },
         ]}
       />
       <Header>
         <Service name="Dialogue" tagline="#dialogue, l'outil du MESRE pour structurer les échanges et les contributions des acteurs de l'ESR" />
         <Logo text={VITE_MINISTER_NAME} />
-        <Nav id="header-navigation">
+        <Nav id="menu">
           <Link current={!pathname.startsWith("/admin")} href="/">Campagnes</Link>
-          <Link current={pathname.startsWith("/admin/users")} href="/admin/users">Utilisateurs</Link>
+          <Link current={pathname.startsWith("/users")} href="/users">Utilisateurs</Link>
+          <Link current={pathname.startsWith("/builder")} href="/builder">SurveyJS</Link>
         </Nav>
       </Header>
-      <Container as="main" id="contenu">
+      <Container as="main" id="content">
         <Row gutters>
           <Col xs="12" md="7">
             <Outlet />

@@ -4,6 +4,6 @@ import campaignsRoutes from "./campaigns/index.ts"
 import usersRoutes from "./users/index.ts"
 
 const router = Router()
-router.use("/admin", campaignsRoutes)
-router.use("/admin", usersRoutes)
+router.use(campaignsRoutes)
+router.use(usersRoutes)
 export default router

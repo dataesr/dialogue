@@ -7,11 +7,11 @@ import type { VintageType } from "../../../../types/vintage.ts"
 
 const router = Router()
 const collection = "vintages"
-const prefix = `campaigns/:campaignId/${collection}`
+const prefix = `/admin/campaigns/:campaignId/${collection}`
 const auditedCampaigns = auditedCollection("campaigns")
 
 // /admin/campaigns/campaignId/vintages
-router.route(`/${prefix}`)
+router.route(prefix)
   .get(async (req, res) => {
     const campaignId = new ObjectId(req.params.campaignId)
     const response = await db.collection(collection).find({ campaign_id: campaignId }).toArray()
@@ -40,7 +40,7 @@ router.route(`/${prefix}`)
     })
   })
 
-router.route(`/${prefix}/:vintageId`)
+router.route(`${prefix}/:vintageId`)
   .get(async (req, res) => {
     const _id = new ObjectId(req.params.vintageId)
     const response = await db.collection(collection).aggregate([

@@ -4,13 +4,14 @@ import { db } from "../../../services/mongo.ts"
 import type { UserNewType } from "../../../types/user.ts"
 
 const router = Router()
-const name = "users"
+const collection = "users"
+const prefix = `/admin/${collection}`
 
 // /admin/users
 router
-  .route(`/${name}`)
+  .route(prefix)
   .get(async (_req, res) => {
-    const response = await db.collection(name).find().toArray()
+    const response = await db.collection(collection).find().toArray()
     res.json(response)
   })
   .post(async (req, res) => {
@@ -21,7 +22,7 @@ router
       lastName: req.body.lastName,
       role: "user",
     }
-    const response = await db.collection(name).insertOne(user)
+    const response = await db.collection(collection).insertOne(user)
     res.status(201).json({
       message: `User ${user.firstName} ${user.lastName} added. id: ${response.insertedId}`,
     })

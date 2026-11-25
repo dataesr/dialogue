@@ -8,10 +8,11 @@ import vintageRoutes from "./vintages/index.ts"
 
 const router = Router()
 const collection = "campaigns"
+const prefix = `/admin/${collection}`
 const auditedCampaigns = auditedCollection(collection)
 
 // /admin/campaigns
-router.route(`/${collection}`)
+router.route(prefix)
   .get(async (_req, res) => {
     const response = await db.collection(collection).aggregate([
       { $match: {} },
@@ -64,7 +65,7 @@ router.route(`/${collection}`)
     })
   })
 
-router.route(`/${collection}/:campaignId`)
+router.route(`${prefix}/:campaignId`)
   .get(async (req, res) => {
     const _id = new ObjectId(req.params.campaignId)
     const response = await db.collection(collection).aggregate([

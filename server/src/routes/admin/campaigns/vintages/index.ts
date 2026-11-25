@@ -7,7 +7,7 @@ import type { VintageType } from "../../../../types/vintage.ts"
 
 const router = Router()
 const collection = "vintages"
-const prefix = `campaign/:campaignId/${collection}`
+const prefix = `campaigns/:campaignId/${collection}`
 const auditedCampaigns = auditedCollection("campaigns")
 
 // /admin/campaigns/campaignId/vintages

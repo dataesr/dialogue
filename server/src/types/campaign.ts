@@ -7,6 +7,7 @@ export type CampaignValidationType = "none" | "declarative" | "locking"
 export type CampaignType = {
   _id: ObjectId
   name: string
+  numberOfVintages: number
   shortName?: string
   tagline?: string
   validation: CampaignValidationType

@@ -3,7 +3,7 @@ import { ObjectId } from "mongodb"
 
 import { auditedCollection } from "../../../services/auditedCollection.ts"
 import { db } from "../../../services/mongo.ts"
-import type { CampaignType } from "../../../types/campaign.ts"
+import type { CampaignlightType, CampaignType } from "../../../types/campaign.ts"
 import vintageRoutes from "./vintages/index.ts"
 
 const router = Router()
@@ -13,7 +13,33 @@ const auditedCampaigns = auditedCollection(collection)
 // /admin/campaigns
 router.route(`/${collection}`)
   .get(async (_req, res) => {
-    const response = await db.collection(collection).find().toArray()
+    const response = await db.collection(collection).aggregate([
+      { $match: {} },
+      {
+        $project: {
+          createdAt: 0,
+          createdBy: 0,
+        }
+      },
+      {
+        $lookup: {
+          from: "vintages",
+          localField: "_id",
+          foreignField: "campaign_id",
+          as: "vintages",
+        }
+      },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          shortName: 1,
+          tagline: 1,
+          validation: 1,
+          numberOfVintages: { $size: "$vintages" },
+        }
+      }
+    ]).toArray()
     res.json(response)
   })
   .post(async (req, res) => {

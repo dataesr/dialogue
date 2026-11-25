@@ -59,6 +59,7 @@ export default function Campaigns() {
               <th>Nom court</th>
               <th>Accroche</th>
               <th>Mode de validation</th>
+              <th>Nombre de millésimes</th>
             </tr>
           </thead>
           <tbody>
@@ -68,6 +69,7 @@ export default function Campaigns() {
                 <td>{campaign?.shortName}</td>
                 <td>{campaign?.tagline}</td>
                 <td>{CAMPAIGN_VALIDATIONS.find((item) => item.key === campaign.validation)?.label ?? "Mode de validation inconnu"}</td>
+                <td>{campaign?.numberOfVintages}</td>
               </tr>
             ))}
           </tbody>

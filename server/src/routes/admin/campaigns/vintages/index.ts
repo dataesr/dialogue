@@ -4,7 +4,6 @@ import { ObjectId } from "mongodb"
 import { auditedCollection } from "../../../../services/auditedCollection.ts"
 import { db } from "../../../../services/mongo.ts"
 import type { VintageType } from "../../../../types/vintage.ts"
-import router from "../index.ts"
 
 const router = Router()
 const collection = "vintages"

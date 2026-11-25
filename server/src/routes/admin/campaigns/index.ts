@@ -3,7 +3,7 @@ import { ObjectId } from "mongodb"
 
 import { auditedCollection } from "../../../services/auditedCollection.ts"
 import { db } from "../../../services/mongo.ts"
-import type { CampaignLight, Campaign } from "../../../types/campaign.ts"
+import type { Campaign, CampaignLight } from "../../../types/campaign.ts"
 import vintageRoutes from "./vintages/index.ts"
 
 const router = Router()

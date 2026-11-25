@@ -4,16 +4,18 @@ import { ObjectId } from "mongodb"
 import { auditedCollection } from "../../../../services/auditedCollection.ts"
 import { db } from "../../../../services/mongo.ts"
 import type { VintageType } from "../../../../types/vintage.ts"
+import router from "../index.ts"
 
 const router = Router()
-const name = "vintages"
-const auditedCampaigns = auditedCollection(name)
+const collection = "vintages"
+const prefix = `campaign/:campaignId/${collection}`
+const auditedCampaigns = auditedCollection("campaigns")
 
 // /admin/campaigns/campaignId/vintages
-router.route(`/${name}`)
+router.route(`/${prefix}`)
   .get(async (req, res) => {
     const campaignId = new ObjectId(req.params.campaignId)
-    const response = await db.collection(name).find({ campaign_id: campaignId }).toArray()
+    const response = await db.collection(collection).find({ campaign_id: campaignId }).toArray()
     res.json(response)
   })
   .post(async (req, res) => {
@@ -39,10 +41,10 @@ router.route(`/${name}`)
     })
   })
 
-router.route(`/${name}/:vintageId`)
+router.route(`/${prefix}/:vintageId`)
   .get(async (req, res) => {
     const _id = new ObjectId(req.params.vintageId)
-    const response = await db.collection(name).aggregate([
+    const response = await db.collection(collection).aggregate([
       { $match: { _id } },
       { $limit: 1 },
     ])
@@ -59,7 +61,7 @@ router.route(`/${name}/:vintageId`)
 
     // Update vintage into MongoDB
     const vintageId = new ObjectId(_id)
-    await db.collection(name).updateOne({ _id: vintageId }, { $set: { ...vintage } })
+    await db.collection(collection).updateOne({ _id: vintageId }, { $set: { ...vintage } })
 
     res.status(200).json({
       message: `Vintage ${vintage.name} modified. id: ${_id}`,
@@ -67,7 +69,7 @@ router.route(`/${name}/:vintageId`)
   })
   .delete(async (req, res) => {
     const _id = new ObjectId(req.params.vintageId)
-    await db.collection(name).deleteOne({ _id })
+    await db.collection(collection).deleteOne({ _id })
     res.status(200).json({
       message: `Vintage deleted. id: ${_id}`
     })

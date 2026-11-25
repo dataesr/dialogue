@@ -65,20 +65,33 @@ To deploy in production, simply run this command from your staging branch :
 
 cf. Dialogue v1 & POC
 
-5 rôles pour l'administration de Dialogue:
-- lecteur
-- contributeur
-- superviseur niveau 1 (souvent au niveau du rectorat, gestion de la campagne à l'échelle académique donc gère les établissements de la région académique telle que définie par Paysage)
-- superviseur niveau 2 (plutôt le ministère et les MOA des différentes campagnes, donc gère tous les établissements qui participent à la campagne)
-- admin (Yann, Alexandra & Mialy, gestion des codes d'inviation, ajout ou suppression d'utilisateurs de l'administration, gestion des droits de ces utilisateurs ...)
+Espace = millésime x établissement x type d'espace
 
-Ces rôles sont uniquement liés à la partie administration de Dialogue. Chaque rôle peut voir la liste des campagnes en cours, en test ou passées de ses espaces. Le rôle de répondant à un millésime d'une campagne est géré différemment.
+3 types d'espace
+- Contribution
+- Superviseur niveau 1 (souvent au niveau du rectorat, gestion de la campagne à l'échelle académique donc gère les établissements de la région académique telle que définie par Paysage)
+- Superviseur niveau 2 (plutôt le ministère et les MOA des différentes campagnes, donc gère tous les établissements qui participent à la campagne)
+- Admin (Yann, Alexandra & Mialy, gestion des codes d'inviation, ajout ou suppression d'utilisateurs de l'administration, gestion des droits de ces utilisateurs ...)
 
-Espaces
-- millésime x établissement x rôle
+4 rôles associés à des espaces de type "contribution"
+- Lecteur
+- Répondant
+- Répondant plus (Rôle disponible uniquement dans certaines campagnes, est un contributeur avec des rôles en plus (par exemple classer des fiches-projets, elles même rédigées par les contributeurs))
+- Valideur
 
-1 même établissement peut exister au sein d'espaces différents au sein d'un millésime. Avec donc des rôles différents.
+Chaque rôle peut voir la liste des campagnes en cours, en test ou passées de ses espaces. Un utilisateur peut se créer un compte sur Dialogue, donc avec le millésime lié. Un même utilisateur peut avoir accès à plusieurs millésimes dans ce cas, sa page d'accueil liste les millésimes des différentes campagnes auxquels il appartient.
 
-Un code d'invitation peut être saisi dans l'UI de réponse de Dialogue. Paysage assure le lien entre un nom de domaine d'adresse email et une structure (et donc un espace).
+Un même établissement peut exister au sein d'espaces différents dans un millésime. Avec donc des rôles différents.
 
-Un superviseur peut inviter des utilisateurs avec un rôle lecteur, contributeur ou superviseur.
+Un code d'invitation peut être saisi dans l'UI de réponse de Dialogue. Paysage assure le lien entre un nom de domaine d'adresse email et une structure (et donc un espace). Chaque code est lié à un millésime d'une campagne et un rôle, et en fonction du domaine de l'adresse email on est rattaché à une structure. Donc une fois le code saisi, j'arrive dans l'espace dédié et là je peux répondre à l'enquête.
+
+Un utilisateur de Dialogue peut inviter par email des utilisteurs avec un rôle identique ou "inférieur" au sien. Par exemple, un superviseur peut inviter des utilisateurs avec un rôle lecteur, contributeur ou superviseur.
+
+Pour les rôles de validateurs, le process est différent. Cf Paysage et l'équipe de direction avec les adresses emailsde la directeur / directrice qui sont immédiatement ajoutés comme valideurs.
+
+Sur le POC, il existe une page qui liste les différences entre les rôles de gouvernance dans Paysage et les rôles de valideurs dans Paysage (attention aux dates de validation): https://dialogue.dataesr.fr/admin/paysage/domaines.
+
+Pour un espace donné, la première personne (sauf rôle lecteur) à se connecter sur l'espace doit revalider, un par un, les utilisateurs de cet espace du millésime précédent. Cela est bloquant pour les autres personnes qui souhaitent de connecter à cet esapce. A voir comment faire techniquement
+
+
+Problématiques de performances

@@ -7,13 +7,13 @@ import type { CampaignType } from "../../../types/campaign.ts"
 import vintageRoutes from "./vintages/index.ts"
 
 const router = Router()
-const name = "campaigns"
-const auditedCampaigns = auditedCollection(name)
+const collection = "campaigns"
+const auditedCampaigns = auditedCollection(collection)
 
 // /admin/campaigns
-router.route(`/${name}`)
+router.route(`/${collection}`)
   .get(async (_req, res) => {
-    const response = await db.collection(name).find().toArray()
+    const response = await db.collection(collection).find().toArray()
     res.json(response)
   })
   .post(async (req, res) => {
@@ -38,10 +38,10 @@ router.route(`/${name}`)
     })
   })
 
-router.route(`/${name}/:campaignId`)
+router.route(`/${collection}/:campaignId`)
   .get(async (req, res) => {
     const _id = new ObjectId(req.params.campaignId)
-    const response = await db.collection(name).aggregate([
+    const response = await db.collection(collection).aggregate([
       { $match: { _id } },
       { $limit: 1 },
       {
@@ -67,7 +67,7 @@ router.route(`/${name}/:campaignId`)
 
     // Update campaign into MongoDB
     const campaignId = new ObjectId(_id)
-    await db.collection(name).updateOne({ _id: campaignId }, { $set: { ...campaign } })
+    await db.collection(collection).updateOne({ _id: campaignId }, { $set: { ...campaign } })
 
     res.status(200).json({
       message: `Campaign ${campaign.name} modified. id: ${_id}`,
@@ -76,12 +76,12 @@ router.route(`/${name}/:campaignId`)
   // TODO: Delete linked vintages
   .delete(async (req, res) => {
     const _id = new ObjectId(req.params.campaignId)
-    await db.collection(name).deleteOne({ _id })
+    await db.collection(collection).deleteOne({ _id })
     res.status(200).json({
       message: `Campaign deleted. id: ${_id}`
     })
   })
 
-router.use(`/${name}/:campaignId`, vintageRoutes)
+router.use(vintageRoutes)
 
 export default router

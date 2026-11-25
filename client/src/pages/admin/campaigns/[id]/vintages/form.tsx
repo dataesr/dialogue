@@ -10,7 +10,7 @@ import { useNavigate } from "react-router"
 
 import type { VintageStatusType, VintageTypeLight } from "../../../../../../../server/src/types/vintage"
 
-type VintageForm = Omit<VintageTypeLight, "campaign_id">
+type VintageForm = Omit<VintageTypeLight, "campaignId">
 
 const VINTAGE_STATUS = [
   { key: "draft", label: "Brouillon" },
@@ -40,6 +40,7 @@ export default function VintageForm({ onSubmit = () => { }, v }: { onSubmit?: ()
     if (!vintage?.name) errorsTmp.name = "Un nom est requis !"
     if (vintage.name && vintage.name.length < 2) errorsTmp.name = "Le nom doit avoir 2 caractères ou plus"
     if (vintage.name && vintage.name.length > 255) errorsTmp.name = "Le nom doit avoir strictement moins de 256 caractères"
+    if (vintage.status === "") errorsTmp.status = "Statut ne doit pas être vide"
     if (Object.keys(errorsTmp).length > 0) {
       setErrors(errorsTmp)
       setShowErrors(true)
@@ -94,6 +95,7 @@ export default function VintageForm({ onSubmit = () => { }, v }: { onSubmit?: ()
       <Select
         aria-label="Statut"
         disabledKeys={[""]}
+        isRequired
         label="Statut"
         message={(showErrors && errors?.status) ? <>{errors.status}</> : null}
         messageType={(showErrors && errors?.status) ? "error" : null}

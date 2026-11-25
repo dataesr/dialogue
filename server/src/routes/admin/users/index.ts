@@ -1,7 +1,7 @@
 import { Router } from "express"
 
 import { db } from "../../../services/mongo.ts"
-import type { UserNewType } from "../../../types/user.ts"
+import type { UserNew } from "../../../types/user.ts"
 
 const router = Router()
 const collection = "users"
@@ -15,7 +15,7 @@ router
     res.json(response)
   })
   .post(async (req, res) => {
-    const user: UserNewType = {
+    const user: UserNew = {
       email: req.body.email,
       firstName: req.body.firstName,
       isActive: true,

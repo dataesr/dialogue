@@ -1,20 +1,21 @@
-import type { ObjectId } from "mongodb";
-import type { VintageLightType } from "./vintage.ts";
+import type { ObjectId } from "mongodb"
 
-export type CampaignValidationType = "none" | "declarative" | "locking";
+import type { VintageLight } from "./vintage.ts"
 
-export interface CampaignType {
-  _id: ObjectId;
-  name: string;
-  numberOfVintages: number;
-  shortName?: string;
-  tagline?: string;
-  validation: CampaignValidationType;
-  vintages?: VintageLightType[];
-  modifiedBy: string;
-  modifiedAt: Date;
+export type CampaignValidation = "none" | "declarative" | "locking"
+
+export interface Campaign {
+  _id: ObjectId
+  modifiedAt: Date
+  modifiedBy: string
+  name: string
+  numberOfVintages: number
+  shortName?: string
+  tagline?: string
+  validation: CampaignValidation
+  vintages?: VintageLight[]
 }
 
-export type CampaignNewType = Omit<CampaignType, "_id" | "modifiedBy" | "modifiedAt">;
+export type CampaignNew = Omit<Campaign, "_id" | "modifiedBy" | "modifiedAt">
 
-export type CampaignlightType = Omit<CampaignType, "_id" | "vintages">;
+export type CampaignLight = Omit<Campaign, "_id" | "vintages">

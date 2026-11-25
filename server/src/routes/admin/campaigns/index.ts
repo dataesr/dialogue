@@ -3,7 +3,7 @@ import { ObjectId } from "mongodb"
 
 import { auditedCollection } from "../../../services/auditedCollection.ts"
 import { db } from "../../../services/mongo.ts"
-import type { CampaignlightType, CampaignType } from "../../../types/campaign.ts"
+import type { CampaignLight, Campaign } from "../../../types/campaign.ts"
 import vintageRoutes from "./vintages/index.ts"
 
 const router = Router()
@@ -26,7 +26,7 @@ router.route(prefix)
         $lookup: {
           from: "vintages",
           localField: "_id",
-          foreignField: "campaign_id",
+          foreignField: "campaignId",
           as: "vintages",
         }
       },
@@ -45,7 +45,7 @@ router.route(prefix)
   })
   .post(async (req, res) => {
     const campaignId = new ObjectId()
-    const campaign: CampaignType = {
+    const campaign: Campaign = {
       _id: campaignId,
       name: req.body.name,
       validation: req.body.validation,
@@ -75,7 +75,7 @@ router.route(`${prefix}/:campaignId`)
         $lookup: {
           from: "vintages",
           localField: "_id",
-          foreignField: "campaign_id",
+          foreignField: "campaignId",
           as: "vintages",
         },
       },
@@ -86,7 +86,7 @@ router.route(`${prefix}/:campaignId`)
   })
   .patch(async (req, res) => {
     const _id = new ObjectId(req.params.campaignId)
-    const { _id: _, ...campaign }: CampaignType = req.body
+    const { _id: _, ...campaign }: Campaign = req.body
     const errors: { name?: string, shortName?: string } = {}
     if (campaign.name.length < 2 || campaign.name.length > 255) errors.name = "The campaign name should have 2 to 255 characters"
     if (campaign?.shortName && (campaign.shortName.length < 2 || campaign.shortName.length > 64)) errors.shortName = "The campaign name should have 2 to 255 characters"

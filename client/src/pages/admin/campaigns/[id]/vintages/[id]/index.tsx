@@ -10,7 +10,7 @@ import { useParams } from "react-router-dom"
 import type { VintageTypeLight, VintageStatusType } from "../../../../../../../../server/src/types/vintage"
 import VintageForm from "../form"
 
-type VintageTypeForm = Omit<Omit<VintageTypeLight, "campaign_id">, "status"> & {
+type VintageTypeForm = Omit<Omit<VintageTypeLight, "campaignId">, "status"> & {
   status: VintageStatusType | ""
 }
 

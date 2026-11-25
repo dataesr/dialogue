@@ -3,7 +3,7 @@ import { ObjectId } from "mongodb"
 
 import { auditedCollection } from "../../../../services/auditedCollection.ts"
 import { db } from "../../../../services/mongo.ts"
-import type { VintageType } from "../../../../types/vintage.ts"
+import type { Vintage } from "../../../../types/vintage.ts"
 
 const router = Router()
 const collection = "vintages"
@@ -14,15 +14,15 @@ const auditedCampaigns = auditedCollection("campaigns")
 router.route(prefix)
   .get(async (req, res) => {
     const campaignId = new ObjectId(req.params.campaignId)
-    const response = await db.collection(collection).find({ campaign_id: campaignId }).toArray()
+    const response = await db.collection(collection).find({ campaignId: campaignId }).toArray()
     res.json(response)
   })
   .post(async (req, res) => {
     const campaignId = new ObjectId(req.params.campaignId)
     const vintageId = new ObjectId()
-    const vintage: VintageType = {
+    const vintage: Vintage = {
       _id: vintageId,
-      campaign_id: campaignId,
+      campaignId,
       name: req.body.name,
       status: req.body.status,
     }
@@ -53,7 +53,7 @@ router.route(`${prefix}/:vintageId`)
   })
   .patch(async (req, res) => {
     const _id = new ObjectId(req.params.vintageId)
-    const { _id: _, ...vintage }: VintageType = req.body
+    const { _id: _, ...vintage }: Vintage = req.body
     const errors: { name?: string, status?: string } = {}
     if (vintage.name.length < 2 || vintage.name.length > 255) errors.name = "The campaign name should have 2 to 255 characters"
     if (Object.keys(errors).length > 0) return res.status(304).json({ message: Object.values(errors).join(" // ") })

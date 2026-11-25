@@ -14,7 +14,7 @@ const auditedCampaigns = auditedCollection("campaigns")
 router.route(prefix)
   .get(async (req, res) => {
     const campaignId = new ObjectId(req.params.campaignId)
-    const response = await db.collection(collection).find({ campaignId: campaignId }).toArray()
+    const response = await db.collection(collection).find({ campaignId }).toArray()
     res.json(response)
   })
   .post(async (req, res) => {
@@ -32,7 +32,7 @@ router.route(prefix)
     if (vintage.name.length < 2 || vintage.name.length > 255) errors.name = "The vintage name should have 2 to 255 characters"
     if (Object.keys(errors).length > 0) return res.status(304).json({ message: Object.values(errors).join(" // ") })
 
-    // Save campaign into MongoDB
+    // Save vintage into MongoDB
     await auditedCampaigns.insertOne(vintage)
 
     res.status(201).json({

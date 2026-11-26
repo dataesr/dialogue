@@ -54,7 +54,7 @@ export default function Vintages({ vintages = [] }: { vintages: VintageLight[] }
               <td>{VINTAGE_STATUS.find((item) => item.key === vintage.status)?.label ?? "Statut inconnu"}</td>
               <td>{vintage?.opensAt?.toString()}</td>
               <td>{vintage?.closesAt?.toString()}</td>
-              <td>{vintage.numberOfSpaces}</td>
+              <td>{vintage?.numberOfSpaces ?? 0}</td>
             </tr>
           ))}
         </tbody>

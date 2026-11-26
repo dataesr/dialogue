@@ -87,5 +87,17 @@ export function auditedCollection(name: string) {
         await audit.insertOne(entry("delete", before._id, diff(before, {}), userId ?? "system"), { session })
         return response
       }).catch(console.error),
+
+    deleteMany: (filter: Filter<Document>) =>
+      withTransaction(async (session) => {
+        const before = await collection.find(filter, { session }).toArray()
+        const beforeIds = before.map((item) => item._id)
+        if (beforeIds.length === 0) return null
+        const { userId } = getContext()
+        const response = await collection.deleteMany({ _id: { $in: beforeIds } }, { session })
+        // audit de la suppression
+        await audit.insertOne(entry("delete", beforeIds, diff(before, {}), userId ?? "system"), { session })
+        return response
+      }).catch(console.error),
   }
 }

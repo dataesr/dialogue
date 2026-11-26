@@ -10,6 +10,8 @@ const router = Router()
 const collection = "vintages"
 const prefix = `/admin/campaigns/:campaignId/${collection}`
 const auditedCollection = audit(collection)
+const childrenCollection = "spaces"
+const childrenAuditedCollection = audit(childrenCollection)
 
 // /admin/campaigns/:campaignId/vintages
 router.route(prefix)
@@ -98,9 +100,11 @@ router.route(`${prefix}/:vintageId`)
       message: `Vintage ${vintage.name} modified. id: ${response?._id}`,
     })
   })
-  // TODO: Delete linked spaces
   .delete(async (req, res) => {
     const _id = new ObjectId(req.params.vintageId)
+    const children = await db.collection(childrenCollection).find({ vintageId: _id }).toArray()
+    const childrenIds = children.map((item) => item._id)
+    await childrenAuditedCollection.deleteMany({ _id: { $in: childrenIds } })
     const response = await auditedCollection.deleteOne({ _id })
     res.status(200).json({
       message: `Vintage deleted. Number of vintages deleted: ${response?.deletedCount}`

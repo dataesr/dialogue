@@ -10,6 +10,8 @@ const router = Router()
 const collection = "campaigns"
 const prefix = `/admin/${collection}`
 const auditedCollection = audit(collection)
+const childrenCollection = "vintages"
+const childrenAuditedCollection = audit(childrenCollection)
 
 // /admin/campaigns
 router.route(prefix)
@@ -72,8 +74,25 @@ router.route(`${prefix}/:campaignId`)
           localField: "_id",
           foreignField: "campaignId",
           as: "vintages",
+          pipeline: [{
+            $lookup: {
+              from: "spaces",
+              localField: "_id",
+              foreignField: "vintageId",
+              as: "spaces",
+            }
+          }, {
+            $project: {
+              _id: 1,
+              closesAt: 1,
+              name: 1,
+              numberOfSpaces: { $size: "$spaces" },
+              opensAt: 1,
+              status: 1,
+            }
+          }]
         },
-      },
+      }
     ]).toArray()
     if (response.length === 1) return res.status(200).json(response[0])
     res.status(404).json({ message: `No campaign found with id ${_id}` })
@@ -91,9 +110,11 @@ router.route(`${prefix}/:campaignId`)
       message: `Campaign ${campaign.name} modified. id: ${response?._id}`,
     })
   })
-  // TODO: Delete linked vintages
   .delete(async (req, res) => {
     const _id = new ObjectId(req.params.campaignId)
+    const children = await db.collection(childrenCollection).find({ campaignId: _id }).toArray()
+    const childrenIds = children.map((item) => item._id)
+    await childrenAuditedCollection.deleteMany({ _id: { $in: childrenIds } })
     const response = await auditedCollection.deleteOne({ _id })
     res.status(200).json({
       message: `Campaign deleted. Number of campaigns deleted: ${response?.deletedCount}`

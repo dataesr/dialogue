@@ -42,7 +42,7 @@ export default function Layout() {
         <Link href="#">Données personnelles</Link>
         <Link href="#">Gestion des cookies</Link>
         <Link
-          href={`https://github.com/dataesr/dialogue/releases/tag/v${VITE_VERSION}`}
+          href={`https://github.com/dataesr/dialogue/releases/tag/${VITE_VERSION}`}
           rel="noreferrer noopener external"
           target="_blank"
           title={`v${VITE_VERSION} - nouvelle fenêtre`}

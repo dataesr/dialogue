@@ -1,6 +1,6 @@
 import type { ObjectId } from "mongodb"
 
-type VintageStatus = "draft" | "test" | "published" | "closed" | "archived"
+export type VintageStatus = "draft" | "test" | "published" | "closed" | "archived"
 
 type AffiliationType = "invitationCode+email" | "email"
 
@@ -19,6 +19,6 @@ export interface Vintage {
   status: VintageStatus
 }
 
-export type VintageNew = Omit<Vintage, "_id" | "modifiedBy" | "modifiedAt">
+export type VintageNew = Omit<Vintage, '_id' | 'modifiedBy' | 'modifiedAt'>
 
 export type VintageLight = Omit<Vintage, '_id' | 'campaignId'>

@@ -7,11 +7,11 @@ import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
 import { useParams } from "react-router-dom"
 
-import type { VintageTypeLight, VintageStatusType } from "../../../../../../../../server/src/types/vintage"
+import type { VintageLight, VintageStatus } from "../../../../../../../../server/src/types/vintage"
 import VintageForm from "../form"
 
-type VintageTypeForm = Omit<Omit<VintageTypeLight, "campaignId">, "status"> & {
-  status: VintageStatusType | ""
+type VintageTypeForm = Omit<Omit<VintageLight, "campaignId">, "status"> & {
+  status: VintageStatus | ""
 }
 
 export default function Vintage() {

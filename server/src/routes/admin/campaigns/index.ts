@@ -3,7 +3,7 @@ import { ObjectId } from "mongodb"
 
 import { auditedCollection } from "../../../services/auditedCollection.ts"
 import { db } from "../../../services/mongo.ts"
-import type { Campaign, CampaignLight } from "../../../types/campaign.ts"
+import type { Campaign, CampaignLight, CampaignNew } from "../../../types/campaign.ts"
 import vintageRoutes from "./vintages/index.ts"
 
 const router = Router()
@@ -44,10 +44,9 @@ router.route(prefix)
     res.json(response)
   })
   .post(async (req, res) => {
-    const campaignId = new ObjectId()
-    const campaign: Campaign = {
-      _id: campaignId,
+    const campaign: CampaignNew = {
       name: req.body.name,
+      numberOfVintages: 0,
       validation: req.body.validation,
     }
     if (req.body?.shortName) campaign.shortName = req.body.shortName
@@ -58,7 +57,7 @@ router.route(prefix)
     if (Object.keys(errors).length > 0) return res.status(304).json({ message: Object.values(errors).join(" // ") })
 
     // Save campaign into MongoDB
-    await auditedCampaigns.insertOne(campaign)
+    const campaignId = await auditedCampaigns.insertOne(campaign)
 
     res.status(201).json({
       message: `Campaign ${campaign.name} added. id: ${campaignId}`,

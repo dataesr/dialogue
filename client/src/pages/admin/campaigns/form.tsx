@@ -8,10 +8,10 @@ import {
 import { useState } from "react"
 import { useNavigate } from "react-router"
 
-import type { CampaignType, CampaignValidationType } from "../../../../../server/src/types/campaign"
+import type { CampaignNew, CampaignValidation } from "../../../../../server/src/types/campaign"
 
-type CampaignForm = Omit<CampaignType, "validation"> & {
-  validation: CampaignValidationType | ""
+type CampaignForm = Omit<CampaignNew, "validation"> & {
+  validation: CampaignValidation | ""
 }
 
 const CAMPAIGN_VALIDATIONS = [
@@ -21,7 +21,7 @@ const CAMPAIGN_VALIDATIONS = [
   { key: "locking", label: "Validation bloquante" },
 ]
 
-const defaultCampaign: CampaignForm = { name: "", validation: "" }
+const defaultCampaign: CampaignForm = { name: "", shortName: undefined, tagline: undefined, validation: "" }
 
 export default function CampaignForm({ c, onSubmit = () => { } }: { c?: CampaignForm, onSubmit?: () => void }) {
   const [campaign, setCampaign] = useState<CampaignForm>(c ?? defaultCampaign)
@@ -106,7 +106,7 @@ export default function CampaignForm({ c, onSubmit = () => { } }: { c?: Campaign
         label="Mode de validation"
         message={(showErrors && errors?.validation) ? <>{errors.validation}</> : null}
         messageType={(showErrors && errors?.validation) ? "error" : null}
-        onChange={(e) => setCampaign({ ...campaign, validation: e as CampaignValidationType })}
+        onChange={(e) => setCampaign({ ...campaign, validation: e as CampaignValidation })}
         value={campaign.validation}
       >
         {CAMPAIGN_VALIDATIONS.map(({ key, label }) => <SelectOption key={key}>{label}</SelectOption>)}

@@ -3,14 +3,14 @@ import { ObjectId } from "mongodb"
 
 import { auditedCollection } from "../../../../services/auditedCollection.ts"
 import { db } from "../../../../services/mongo.ts"
-import type { Vintage } from "../../../../types/vintage.ts"
+import type { Vintage, VintageNew } from "../../../../types/vintage.ts"
 
 const router = Router()
 const collection = "vintages"
 const prefix = `/admin/campaigns/:campaignId/${collection}`
 const auditedCampaigns = auditedCollection("campaigns")
 
-// /admin/campaigns/campaignId/vintages
+// /admin/campaigns/:campaignId/vintages
 router.route(prefix)
   .get(async (req, res) => {
     const campaignId = new ObjectId(req.params.campaignId)
@@ -19,9 +19,7 @@ router.route(prefix)
   })
   .post(async (req, res) => {
     const campaignId = new ObjectId(req.params.campaignId)
-    const vintageId = new ObjectId()
-    const vintage: Vintage = {
-      _id: vintageId,
+    const vintage: VintageNew = {
       campaignId,
       name: req.body.name,
       status: req.body.status,
@@ -33,7 +31,7 @@ router.route(prefix)
     if (Object.keys(errors).length > 0) return res.status(304).json({ message: Object.values(errors).join(" // ") })
 
     // Save vintage into MongoDB
-    await auditedCampaigns.insertOne(vintage)
+    const vintageId = await auditedCampaigns.insertOne(vintage)
 
     res.status(201).json({
       message: `Vintage ${vintage.name} added. id: ${vintageId}`,

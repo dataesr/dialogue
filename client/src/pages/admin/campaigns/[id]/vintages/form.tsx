@@ -8,9 +8,7 @@ import {
 import { useState } from "react"
 import { useNavigate } from "react-router"
 
-import type { VintageStatusType, VintageTypeLight } from "../../../../../../../server/src/types/vintage"
-
-type VintageForm = Omit<VintageTypeLight, "campaignId">
+import type { VintageStatus, VintageLight } from "../../../../../../../server/src/types/vintage"
 
 const VINTAGE_STATUS = [
   { key: "draft", label: "Brouillon" },
@@ -20,12 +18,12 @@ const VINTAGE_STATUS = [
   { key: "archived", label: "Archivée" },
 ]
 
-const defaultVintage: VintageForm = { name: "", status: "draft" }
+const defaultVintage: VintageLight = { name: "", status: "draft" }
 
-export default function VintageForm({ onSubmit = () => { }, v }: { onSubmit?: () => void, v?: VintageForm }) {
+export default function VintageForm({ onSubmit = () => { }, v }: { onSubmit?: () => void, v?: VintageLight }) {
   const [errors, setErrors] = useState<{ [key: string]: unknown }>({})
   const [showErrors, setShowErrors] = useState<boolean>(false)
-  const [vintage, setVintage] = useState<VintageForm>(v ?? defaultVintage)
+  const [vintage, setVintage] = useState<VintageLight>(v ?? defaultVintage)
     const navigate = useNavigate()
 
   const resetForm = () => {
@@ -36,11 +34,10 @@ export default function VintageForm({ onSubmit = () => { }, v }: { onSubmit?: ()
 
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault()
-    const errorsTmp: { name?: string, status?: string } = {}
+    const errorsTmp: { name?: string } = {}
     if (!vintage?.name) errorsTmp.name = "Un nom est requis !"
     if (vintage.name && vintage.name.length < 2) errorsTmp.name = "Le nom doit avoir 2 caractères ou plus"
     if (vintage.name && vintage.name.length > 255) errorsTmp.name = "Le nom doit avoir strictement moins de 256 caractères"
-    if (vintage.status === "") errorsTmp.status = "Statut ne doit pas être vide"
     if (Object.keys(errorsTmp).length > 0) {
       setErrors(errorsTmp)
       setShowErrors(true)
@@ -99,7 +96,7 @@ export default function VintageForm({ onSubmit = () => { }, v }: { onSubmit?: ()
         label="Statut"
         message={(showErrors && errors?.status) ? <>{errors.status}</> : null}
         messageType={(showErrors && errors?.status) ? "error" : null}
-        onChange={(e) => setVintage({ ...vintage, status: e as VintageStatusType })}
+        onChange={(e) => setVintage({ ...vintage, status: e as VintageStatus })}
         value={vintage.status}
       >
         {VINTAGE_STATUS.map(({ key, label }) => <SelectOption key={key}>{label}</SelectOption>)}

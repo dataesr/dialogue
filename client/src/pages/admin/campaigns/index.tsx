@@ -10,7 +10,7 @@ import {
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
 
-import type { CampaignType, CampaignValidationType } from "../../../../../server/src/types/campaign"
+import type { Campaign, CampaignValidation } from "../../../../../server/src/types/campaign"
 import CampaignForm from "./form"
 
 const CAMPAIGN_VALIDATIONS = [
@@ -20,15 +20,15 @@ const CAMPAIGN_VALIDATIONS = [
   { key: "locking", label: "Validation bloquante" },
 ]
 
-type CampaignForm = Omit<CampaignType, "validation"> & {
-  validation: CampaignValidationType | ""
+type CampaignForm = Omit<Campaign, "validation"> & {
+  validation: CampaignValidation | ""
 }
 
 export default function Campaigns() {
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const queryClient = useQueryClient()
 
-  const { data: campaigns, isError, isLoading } = useQuery<CampaignType[]>({
+  const { data: campaigns, isError, isLoading } = useQuery<Campaign[]>({
     queryKey: ["campaigns"],
     queryFn: async () => {
       const response = await fetch("/api/admin/campaigns")
@@ -63,7 +63,7 @@ export default function Campaigns() {
             </tr>
           </thead>
           <tbody>
-            {(campaigns ?? []).map((campaign: CampaignType, index: number) => (
+            {(campaigns ?? []).map((campaign: Campaign, index: number) => (
               <tr key={`campaign-${index}`}>
                 <td><a href={`./campagnes/${campaign._id}`}>{campaign.name}</a></td>
                 <td>{campaign?.shortName}</td>

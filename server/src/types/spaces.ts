@@ -15,6 +15,6 @@ export interface Space {
   vintageId: ObjectId
 }
 
-export type SpaceNew = Omit<Space, "_id" | "modifiedBy" | "modifiedAt">
+export type SpaceNew = Omit<Space, '_id' | 'modifiedBy' | 'modifiedAt'>
 
-export type SpaceLight = Omit<Space, "_id">
+export type SpaceLight = Omit<Space, '_id'>

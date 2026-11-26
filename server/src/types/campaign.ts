@@ -16,6 +16,6 @@ export interface Campaign {
   vintages?: VintageLight[]
 }
 
-export type CampaignNew = Omit<Campaign, "_id" | "modifiedBy" | "modifiedAt">
+export type CampaignNew = Omit<Campaign, '_id' | 'numberOfVintages' | 'modifiedBy' | 'modifiedAt'>
 
-export type CampaignLight = Omit<Campaign, "_id" | "vintages">
+export type CampaignLight = Omit<Campaign, '_id' | 'vintages'>

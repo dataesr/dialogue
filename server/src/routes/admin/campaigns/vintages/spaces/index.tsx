@@ -10,7 +10,7 @@ const collection = "spaces"
 const prefix = `/admin/campaigns/:campaignId/vintages/:vintageId/${collection}`
 const auditedVintages = auditedCollection("vintages")
 
-// /admin/campaigns/campaignId/vintages/vintageId/spaces
+// /admin/campaigns/:campaignId/vintages/:vintageId/spaces
 router.route(prefix)
   .get(async (req, res) => {
     const vintageId = new ObjectId(req.params.vintageId)

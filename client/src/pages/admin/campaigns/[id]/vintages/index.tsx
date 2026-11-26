@@ -8,7 +8,7 @@ import {
 import { useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
 
-import type { VintageTypeLight } from "../../../../../../../server/src/types/vintage"
+import type { VintageLight } from "../../../../../../../server/src/types/vintage"
 import VintageForm from "./form"
 
 const VINTAGE_STATUS = [
@@ -19,7 +19,7 @@ const VINTAGE_STATUS = [
   { key: "archived", label: "Archivée" },
 ]
 
-export default function Vintages({ campaignId, vintages = [] }: { campaignId?: string, vintages: VintageTypeLight[] }) {
+export default function Vintages({ campaignId, vintages = [] }: { campaignId?: string, vintages: VintageLight[] }) {
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const queryClient = useQueryClient()
 
@@ -45,7 +45,7 @@ export default function Vintages({ campaignId, vintages = [] }: { campaignId?: s
           </tr>
         </thead>
         <tbody>
-          {(vintages ?? []).map((vintage: VintageTypeLight, index: number) => (
+          {(vintages ?? []).map((vintage: VintageLight, index: number) => (
             <tr key={`vintage-${index}`}>
               <td><a href={`./${campaignId}/millesimes/${vintage._id}`}>{vintage.name}</a></td>
               <td>{vintage.openingDate}</td>

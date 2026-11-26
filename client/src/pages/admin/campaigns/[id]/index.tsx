@@ -7,12 +7,12 @@ import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
 import { useParams } from "react-router-dom"
 
-import type { CampaignTypeLight, CampaignValidationType } from "../../../../../../server/src/types/campaign"
+import type { CampaignLight, CampaignValidation } from "../../../../../../server/src/types/campaign"
 import Vintages from "./vintages"
 import CampaignForm from "../form"
 
-type CampaignTypeForm = Omit<Omit<CampaignTypeLight, "validation">, "_id"> & {
-  validation: CampaignValidationType | ""
+type CampaignTypeForm = Omit<Omit<CampaignLight, "validation">, "_id"> & {
+  validation: CampaignValidation | ""
 }
 
 export default function Campaign() {

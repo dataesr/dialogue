@@ -1,9 +1,7 @@
-import { Col, Container, Header, Link, Logo, Nav, Row, Service, Skiplinks } from "@dataesr/dsfr-plus"
+import { Col, Container, Footer, Header, Link, Logo, Nav, Row, Service, Skiplinks } from "@dataesr/dsfr-plus"
 import { Outlet, useLocation } from "react-router-dom"
 
-import Footer from "./footer"
-
-const { VITE_MINISTER_NAME } = import.meta.env
+const { VITE_MINISTER_NAME, VITE_VERSION } = import.meta.env
 
 export default function Layout() {
   const { pathname } = useLocation()
@@ -33,7 +31,25 @@ export default function Layout() {
           </Col>
         </Row>
       </Container>
-      <Footer />
+      <Footer
+        brand={VITE_MINISTER_NAME}
+        description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in dui mauris. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in dui mauris."
+        id="footer"
+      >
+        <Link href="#">Plan du site</Link>
+        <Link href="#">Accessibilité : non/partiellement/totalement conforme</Link>
+        <Link href="#">Mentions légales</Link>
+        <Link href="#">Données personnelles</Link>
+        <Link href="#">Gestion des cookies</Link>
+        <Link
+          href={`https://github.com/dataesr/dialogue/releases/tag/v${VITE_VERSION}`}
+          rel="noreferrer noopener external"
+          target="_blank"
+          title={`v${VITE_VERSION} - nouvelle fenêtre`}
+        >
+          {`v${VITE_VERSION}`}
+        </Link>
+      </Footer>
     </>
   )
 }

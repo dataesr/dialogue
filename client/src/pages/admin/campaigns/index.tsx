@@ -63,8 +63,8 @@ export default function Campaigns() {
             </tr>
           </thead>
           <tbody>
-            {(campaigns ?? []).map((campaign: Campaign, index: number) => (
-              <tr key={`campaign-${index}`}>
+            {(campaigns ?? []).map((campaign: Campaign) => (
+              <tr key={campaign._id.toString()}>
                 <td><a href={`./campagnes/${campaign._id}`}>{campaign.name}</a></td>
                 <td>{campaign?.shortName}</td>
                 <td>{campaign?.tagline}</td>

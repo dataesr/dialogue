@@ -45,8 +45,8 @@ export default function Vintages({ campaignId, vintages = [] }: { campaignId?: s
           </tr>
         </thead>
         <tbody>
-          {(vintages ?? []).map((vintage: VintageLight, index: number) => (
-            <tr key={`vintage-${index}`}>
+          {(vintages ?? []).map((vintage: VintageLight) => (
+            <tr key={vintage._id.toString()}>
               <td><a href={`./${campaignId}/millesimes/${vintage._id}`}>{vintage.name}</a></td>
               <td>{vintage.openingDate}</td>
               <td>{vintage.closingDate}</td>

@@ -8,7 +8,7 @@ import type { Space, SpaceNew } from "../../../../../types/spaces.ts"
 const router = Router()
 const collection = "spaces"
 const prefix = `/admin/campaigns/:campaignId/vintages/:vintageId/${collection}`
-const auditedVintages = auditedCollection("vintages")
+const auditedVintages = auditedCollection(collection)
 
 // /admin/campaigns/:campaignId/vintages/:vintageId/spaces
 router.route(prefix)

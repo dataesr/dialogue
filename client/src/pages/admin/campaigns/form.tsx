@@ -8,7 +8,7 @@ import {
 import { useState } from "react"
 import { useNavigate } from "react-router"
 
-import type { CampaignNew, CampaignValidation } from "../../../../../server/src/types/campaign"
+import type { Campaign, CampaignNew, CampaignValidation } from "../../../../../server/src/types/campaign"
 
 type CampaignForm = Omit<CampaignNew, "validation"> & {
   validation: CampaignValidation | ""
@@ -23,14 +23,14 @@ const CAMPAIGN_VALIDATIONS = [
 
 const defaultCampaign: CampaignForm = { name: "", shortName: undefined, tagline: undefined, validation: "" }
 
-export default function CampaignForm({ c, onSubmit = () => { } }: { c?: CampaignForm, onSubmit?: () => void }) {
+export default function CampaignForm({ c, onSubmit = () => { } }: { c?: Campaign, onSubmit?: () => void }) {
   const [campaign, setCampaign] = useState<CampaignForm>(c ?? defaultCampaign)
   const [errors, setErrors] = useState<{ [key: string]: unknown }>({})
   const [showErrors, setShowErrors] = useState<boolean>(false)
   const navigate = useNavigate()
 
   const resetForm = () => {
-    setCampaign(defaultCampaign)
+    if (!c) setCampaign(defaultCampaign)
     setErrors({})
     setShowErrors(false)
   }

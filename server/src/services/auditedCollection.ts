@@ -58,7 +58,7 @@ export function auditedCollection(name: string) {
         const toInsert = { ...doc, modifiedAt: new Date(), modifiedBy: userId ?? "system" }
         const res = await collection.insertOne(toInsert, { session }) // insert dans la collection cible
         await audit.insertOne(entry("create", res.insertedId, diff({}, toInsert), userId ?? "system"), { session }) // insert dans la collection d'audit
-        return res
+        return res?.insertedId
       }).catch(console.error)
     },
 

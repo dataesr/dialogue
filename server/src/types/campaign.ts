@@ -13,9 +13,9 @@ export interface Campaign {
   shortName?: string
   tagline?: string
   validation: CampaignValidation
-  vintages?: VintageLight[]
+  vintages: VintageLight[]
 }
 
-export type CampaignNew = Omit<Campaign, '_id' | 'numberOfVintages' | 'modifiedBy' | 'modifiedAt'>
+export type CampaignNew = Omit<Campaign, '_id' | 'numberOfVintages' | 'modifiedBy' | 'modifiedAt' | 'vintages'>
 
-export type CampaignLight = Omit<Campaign, '_id' | 'vintages'>
+export type CampaignLight = Omit<Campaign, 'vintages'>

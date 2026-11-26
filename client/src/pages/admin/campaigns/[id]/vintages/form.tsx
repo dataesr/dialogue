@@ -7,8 +7,9 @@ import {
 } from "@dataesr/dsfr-plus"
 import { useState } from "react"
 import { useNavigate } from "react-router"
+import { useLocation } from "react-router-dom"
 
-import type { VintageStatus, VintageLight } from "../../../../../../../server/src/types/vintage"
+import type { Vintage, VintageNew, VintageStatus } from "../../../../../../../server/src/types/vintage"
 
 const VINTAGE_STATUS = [
   { key: "draft", label: "Brouillon" },
@@ -18,13 +19,14 @@ const VINTAGE_STATUS = [
   { key: "archived", label: "Archivée" },
 ]
 
-const defaultVintage: VintageLight = { name: "", status: "draft" }
-
-export default function VintageForm({ onSubmit = () => { }, v }: { onSubmit?: () => void, v?: VintageLight }) {
+export default function VintageForm({ onSubmit = () => { }, v }: { onSubmit?: () => void, v?: Vintage }) {
+  const navigate = useNavigate()
+  const { pathname } = useLocation()
+  const campaignId = pathname.split("/")[2]
+  const defaultVintage: VintageNew = { name: "", status: "draft" }
   const [errors, setErrors] = useState<{ [key: string]: unknown }>({})
   const [showErrors, setShowErrors] = useState<boolean>(false)
-  const [vintage, setVintage] = useState<VintageLight>(v ?? defaultVintage)
-    const navigate = useNavigate()
+  const [vintage, setVintage] = useState<VintageNew>(v ?? defaultVintage)
 
   const resetForm = () => {
     setVintage(defaultVintage)
@@ -43,7 +45,7 @@ export default function VintageForm({ onSubmit = () => { }, v }: { onSubmit?: ()
       setShowErrors(true)
       return
     }
-    await fetch(`/api/admin/vintages${v ? "/" + v._id : ""}`, {
+    await fetch(`/api/admin/campaigns/${campaignId}/vintages${v ? "/" + v._id : ""}`, {
       body: JSON.stringify(vintage),
       headers: {
         "Content-Type": "application/json",
@@ -56,7 +58,7 @@ export default function VintageForm({ onSubmit = () => { }, v }: { onSubmit?: ()
 
   const handleDelete = async () => {
     if (!v) return
-    await fetch(`/api/admin/vintages/${v._id}`, {
+    await fetch(`/api/admin/campaigns/${campaignId}/vintages/${v._id}`, {
       headers: {
         "Content-Type": "application/json",
       },
@@ -79,15 +81,15 @@ export default function VintageForm({ onSubmit = () => { }, v }: { onSubmit?: ()
       />
       <TextInput
         label="Ouverture"
-        onChange={(e) => { e.preventDefault(); setVintage({ ...vintage, openingDate: e.target.value }) }}
+        onChange={(e) => { e.preventDefault(); setVintage({ ...vintage, opensAt: new Date(e.target.value) }) }}
         type="datetime-local"
-        value={vintage.openingDate}
+        value={vintage.opensAt?.toString()}
       />
       <TextInput
         label="Fermeture"
-        onChange={(e) => { e.preventDefault(); setVintage({ ...vintage, closingDate: e.target.value }) }}
+        onChange={(e) => { e.preventDefault(); setVintage({ ...vintage, closesAt: new Date(e.target.value) }) }}
         type="datetime-local"
-        value={vintage.closingDate}
+        value={vintage.closesAt?.toString()}
       />
       <Select
         aria-label="Statut"

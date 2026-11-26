@@ -1,4 +1,5 @@
 import type { ObjectId } from "mongodb"
+import type { SpaceLight } from "./spaces.ts"
 
 export type VintageStatus = "draft" | "test" | "published" | "closed" | "archived"
 
@@ -13,12 +14,14 @@ export interface Vintage {
   modifiedAt: Date
   modifiedBy: string
   name: string
+  numberOfSpaces: number
   opensAt?: Date
   publishedAt?: Date
   shortDescription?: string
+  spaces: SpaceLight[]
   status: VintageStatus
 }
 
-export type VintageNew = Omit<Vintage, '_id' | 'modifiedBy' | 'modifiedAt'>
+export type VintageNew = Omit<Vintage, '_id' | 'numberOfSpaces' | 'modifiedBy' | 'modifiedAt' | 'spaces'>
 
-export type VintageLight = Omit<Vintage, '_id' | 'campaignId'>
+export type VintageLight = Omit<Vintage, 'campaignId' | 'spaces'>

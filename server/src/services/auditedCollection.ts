@@ -52,15 +52,14 @@ export function auditedCollection(name: string) {
   }
 
   return {
-    insertOne: (doc: Document) => {
+    insertOne: (doc: Document) =>
       withTransaction(async (session) => {
         const { userId } = getContext()
         const toInsert = { ...doc, modifiedAt: new Date(), modifiedBy: userId ?? "system" }
         const res = await collection.insertOne(toInsert, { session }) // insert dans la collection cible
         await audit.insertOne(entry("create", res.insertedId, diff({}, toInsert), userId ?? "system"), { session }) // insert dans la collection d'audit
-        return res?.insertedId
-      }).catch(console.error)
-    },
+        return res
+      }).catch(console.error),
 
     updateOne: (filter: Filter<Document>, update: UpdateFilter<Document>) =>
       withTransaction(async (session) => {

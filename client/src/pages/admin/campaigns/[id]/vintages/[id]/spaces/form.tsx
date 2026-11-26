@@ -9,7 +9,7 @@ import { useState } from "react"
 import { useNavigate } from "react-router"
 import { useParams } from "react-router-dom"
 
-import type { Space, SpaceNew, SpaceType } from "../../../../../../../../../server/src/types/spaces"
+import type { Space, SpaceNew, SpaceType } from "../../../../../../../../../server/src/types/space"
 
 const SPACE_TYPE = [
   { key: "reponse", label: "Répondant" },

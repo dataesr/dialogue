@@ -8,8 +8,8 @@ import { useState } from "react"
 import { useParams } from "react-router-dom"
 
 import type { Campaign, CampaignValidation } from "../../../../../../server/src/types/campaign"
-import Vintages from "./vintages"
 import CampaignForm from "../form"
+import Vintages from "./vintages"
 
 type CampaignForm = Omit<Campaign, "validation"> & {
   validation: CampaignValidation | ""
@@ -38,7 +38,7 @@ export default function Campaign() {
       {!isError && !isLoading && (
         <>
           <Title className="fr-my-3w">Campagne{campaign && ` ${campaign.name}`}</Title>
-          <Text className="fr-text-mention--grey" size="xs"><i>Dernière modification le {campaign.modifiedAt} par {campaign.modifiedBy}</i></Text>
+          <Text className="fr-text-mention--grey" size="xs"><i>Dernière modification le {campaign.modifiedAt.toString()} par {campaign.modifiedBy}</i></Text>
           <CampaignForm c={campaign} onSubmit={() => { queryClient.invalidateQueries({ queryKey: ["campaigns", campaignId] }); queryClient.invalidateQueries({ queryKey: ["campaigns"], exact: true }) }}/>
           <Vintages vintages={campaign?.vintages ?? []} />
         </>

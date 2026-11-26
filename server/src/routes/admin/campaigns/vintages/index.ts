@@ -9,7 +9,7 @@ import stagesRoutes from "./spaces/index.ts"
 const router = Router()
 const collection = "vintages"
 const prefix = `/admin/campaigns/:campaignId/${collection}`
-const auditedCampaigns = auditedCollection(collection)
+const auditedVintages = auditedCollection(collection)
 
 // /admin/campaigns/:campaignId/vintages
 router.route(prefix)
@@ -62,12 +62,9 @@ router.route(prefix)
     const errors: { name?: string, status?: string } = {}
     if (vintage.name.length < 2 || vintage.name.length > 255) errors.name = "The vintage name should have 2 to 255 characters"
     if (Object.keys(errors).length > 0) return res.status(304).json({ message: Object.values(errors).join(" // ") })
-
-    // Save vintage into MongoDB
-    const vintageId = await auditedCampaigns.insertOne(vintage)
-
+    const response = await auditedVintages.insertOne(vintage)
     res.status(201).json({
-      message: `Vintage ${vintage.name} added. id: ${vintageId}`,
+      message: `Vintage ${vintage.name} added. id: ${response?.insertedId}`,
     })
   })
 
@@ -98,7 +95,7 @@ router.route(`${prefix}/:vintageId`)
 
     // Update vintage into MongoDB
     const vintageId = new ObjectId(_id)
-    await db.collection(collection).updateOne({ _id: vintageId }, { $set: { ...vintage } })
+    await auditedVintages.updateOne({ _id: vintageId }, { $set: { ...vintage } })
 
     res.status(200).json({
       message: `Vintage ${vintage.name} modified. id: ${_id}`,
@@ -106,7 +103,7 @@ router.route(`${prefix}/:vintageId`)
   })
   .delete(async (req, res) => {
     const _id = new ObjectId(req.params.vintageId)
-    await db.collection(collection).deleteOne({ _id })
+    await auditedVintages.deleteOne({ _id })
     res.status(200).json({
       message: `Vintage deleted. id: ${_id}`
     })

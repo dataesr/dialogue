@@ -1,5 +1,5 @@
 import type { ObjectId } from "mongodb"
-import type { Space } from "./spaces.ts"
+import type { Space } from "./space.ts"
 
 export type VintageStatus = "draft" | "test" | "published" | "closed" | "archived"
 

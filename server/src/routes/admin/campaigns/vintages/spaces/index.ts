@@ -3,12 +3,12 @@ import { ObjectId } from "mongodb"
 
 import { auditedCollection } from "../../../../../services/auditedCollection.ts"
 import { db } from "../../../../../services/mongo.ts"
-import type { Space, SpaceNew } from "../../../../../types/spaces.ts"
+import type { Space, SpaceNew } from "../../../../../types/space.ts"
 
 const router = Router()
 const collection = "spaces"
 const prefix = `/admin/campaigns/:campaignId/vintages/:vintageId/${collection}`
-const auditedVintages = auditedCollection(collection)
+const auditedSpaces = auditedCollection(collection)
 
 // /admin/campaigns/:campaignId/vintages/:vintageId/spaces
 router.route(prefix)
@@ -27,12 +27,9 @@ router.route(prefix)
     if (req.body?.closedAt) space.closedAt = req.body.closedAt
     if (req.body?.closedBy) space.closedBy = req.body.closedBy
     if (req.body?.closureReason) space.closureReason = req.body.closureReason
-
-    // Save space into MongoDB
-    const spaceId = await auditedVintages.insertOne(space)
-
+    const response = await auditedSpaces.insertOne(space)
     res.status(201).json({
-      message: `Space added. id: ${spaceId}`,
+      message: `Space added. id: ${response?.insertedId}`,
     })
   })
 
@@ -56,7 +53,7 @@ router.route(`${prefix}/:spaceId`)
 
     // Update space into MongoDB
     const spaceId = new ObjectId(_id)
-    await db.collection(collection).updateOne({ _id: spaceId }, { $set: { ...space } })
+    await auditedSpaces.updateOne({ _id: spaceId }, { $set: { ...space } })
 
     res.status(200).json({
       message: `Space modified. id: ${_id}`,
@@ -64,7 +61,7 @@ router.route(`${prefix}/:spaceId`)
   })
   .delete(async (req, res) => {
     const _id = new ObjectId(req.params.spaceId)
-    await db.collection(collection).deleteOne({ _id })
+    await auditedSpaces.deleteOne({ _id })
     res.status(200).json({
       message: `Space deleted. id: ${_id}`
     })

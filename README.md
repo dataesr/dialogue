@@ -98,3 +98,7 @@ Pour les rôles de validateurs, le process est différent. Cf. Paysage et l'équ
 Sur le POC, il existe une page qui liste les différences entre les rôles de gouvernance dans Paysage et les rôles de valideurs dans Paysage (attention aux dates de validation): https://dialogue.dataesr.fr/admin/paysage/domaines. Donc soulève de potentiels problèmes.
 
 Pour un espace donné, la première personne (hors rôle lecteur) à se connecter sur l'espace doit revalider, un par un, les utilisateurs de cet espace du millésime précédent. Cela est bloquant pour les autres personnes qui souhaitent de connecter à cet espace.
+
+.png
+
+![Schéma types d'espaces et rôles utilisateurs](./docs/spaces.png)

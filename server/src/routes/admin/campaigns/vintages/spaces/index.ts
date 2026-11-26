@@ -50,20 +50,17 @@ router.route(`${prefix}/:spaceId`)
     // const errors: { name?: string, status?: string } = {}
     // if (vintage.name.length < 2 || vintage.name.length > 255) errors.name = "The campaign name should have 2 to 255 characters"
     // if (Object.keys(errors).length > 0) return res.status(304).json({ message: Object.values(errors).join(" // ") })
-
-    // Update space into MongoDB
     const spaceId = new ObjectId(_id)
-    await auditedSpaces.updateOne({ _id: spaceId }, { $set: { ...space } })
-
+    const response = await auditedSpaces.updateOne({ _id: spaceId }, { $set: { ...space } })
     res.status(200).json({
-      message: `Space modified. id: ${_id}`,
+      message: `Space modified. id: ${response?._id}`,
     })
   })
   .delete(async (req, res) => {
     const _id = new ObjectId(req.params.spaceId)
-    await auditedSpaces.deleteOne({ _id })
+    const response = await auditedSpaces.deleteOne({ _id })
     res.status(200).json({
-      message: `Space deleted. id: ${_id}`
+      message: `Space deleted. Number of spaces deleted: ${response?.deletedCount}`
     })
   })
 

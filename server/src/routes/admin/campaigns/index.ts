@@ -85,21 +85,18 @@ router.route(`${prefix}/:campaignId`)
     if (campaign.name.length < 2 || campaign.name.length > 255) errors.name = "The campaign name should have 2 to 255 characters"
     if (campaign?.shortName && (campaign.shortName.length < 2 || campaign.shortName.length > 64)) errors.shortName = "The campaign name should have 2 to 255 characters"
     if (Object.keys(errors).length > 0) return res.status(304).json({ message: Object.values(errors).join(" // ") })
-
-    // Update campaign into MongoDB
     const campaignId = new ObjectId(_id)
-    await auditedCampaigns.updateOne({ _id: campaignId }, { $set: { ...campaign } })
-
+    const response = await auditedCampaigns.updateOne({ _id: campaignId }, { $set: { ...campaign } })
     res.status(200).json({
-      message: `Campaign ${campaign.name} modified. id: ${_id}`,
+      message: `Campaign ${campaign.name} modified. id: ${response?._id}`,
     })
   })
   // TODO: Delete linked vintages
   .delete(async (req, res) => {
     const _id = new ObjectId(req.params.campaignId)
-    await auditedCampaigns.deleteOne({ _id })
+    const response = await auditedCampaigns.deleteOne({ _id })
     res.status(200).json({
-      message: `Campaign deleted. id: ${_id}`
+      message: `Campaign deleted. Number of campaigns deleted: ${response?.deletedCount}`
     })
   })
 

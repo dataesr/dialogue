@@ -86,7 +86,7 @@ export default function VintageForm({ onSubmit = () => { }, v }: { onSubmit?: ()
       />
       <TextInput
         label="Ouverture"
-        onChange={(e) => { e.preventDefault(); console.log("update", "***", e.target.value, "***"); setVintage({ ...vintage, opensAt: e.target.value }) }}
+        onChange={(e) => { e.preventDefault(); setVintage({ ...vintage, opensAt: e.target.value }) }}
         type="datetime-local"
         value={(vintage?.opensAt ?? new Date())?.toString() ?? ""}
       />
@@ -98,7 +98,7 @@ export default function VintageForm({ onSubmit = () => { }, v }: { onSubmit?: ()
       />
       <Select
         aria-label="Statut"
-        disabledKeys={[""]}
+        disabledKeys={["draft"]}
         isRequired
         label="Statut"
         message={(showErrors && errors?.status) ? <>{errors.status}</> : null}

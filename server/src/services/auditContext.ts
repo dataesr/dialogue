@@ -1,6 +1,6 @@
 import { AsyncLocalStorage } from "node:async_hooks"
 
-export type AuditContext = { userId?: string; userEmail?: string; ip?: string; requestId?: string }
+export type AuditContext = { ip?: string; requestId?: string; userEmail?: string; userId?: string }
 
 const storage = new AsyncLocalStorage<AuditContext>()
 

@@ -92,20 +92,18 @@ router.route(`${prefix}/:vintageId`)
     const errors: { name?: string, status?: string } = {}
     if (vintage.name.length < 2 || vintage.name.length > 255) errors.name = "The campaign name should have 2 to 255 characters"
     if (Object.keys(errors).length > 0) return res.status(304).json({ message: Object.values(errors).join(" // ") })
-
-    // Update vintage into MongoDB
     const vintageId = new ObjectId(_id)
-    await auditedVintages.updateOne({ _id: vintageId }, { $set: { ...vintage } })
-
+    const response = await auditedVintages.updateOne({ _id: vintageId }, { $set: { ...vintage } })
     res.status(200).json({
-      message: `Vintage ${vintage.name} modified. id: ${_id}`,
+      message: `Vintage ${vintage.name} modified. id: ${response?._id}`,
     })
   })
+  // TODO: Delete linked spaces
   .delete(async (req, res) => {
     const _id = new ObjectId(req.params.vintageId)
-    await auditedVintages.deleteOne({ _id })
+    const response = await auditedVintages.deleteOne({ _id })
     res.status(200).json({
-      message: `Vintage deleted. id: ${_id}`
+      message: `Vintage deleted. Number of vintages deleted: ${response?.deletedCount}`
     })
   })
 

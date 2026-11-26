@@ -20,9 +20,9 @@ function diff(before: Document = {}, after: Document = {}) {
 }
 
 export function auditedCollection(name: string) {
-  const collection = db.collection(name)
   const audit = db.collection("audit_logs")
   const auditError = db.collection("errors_logs")
+  const collection = db.collection(name)
 
   const entry = (action: string, documentId: unknown, changes: unknown[], userId: string) => {
     return {
@@ -65,33 +65,27 @@ export function auditedCollection(name: string) {
       withTransaction(async (session) => {
         const before = await collection.findOne(filter, { session })
         if (!before) return null
-
         const { userId } = getContext()
-
         // Ajout des infos de mise à jour
         await collection.updateOne({ _id: before._id }, { ...update, $set: { ...update.$set, updatedAt: new Date(), updatedBy: userId } }, { session })
         const after = await collection.findOne({ _id: before._id }, { session })
-
         // audit des changements
         const changes = diff(before, after ?? {})
         if (changes.length) {
           await audit.insertOne(entry("update", before._id, changes, userId ?? "system"), { session })
         }
         return after
-      }),
+      }).catch(console.error),
 
     deleteOne: (filter: Filter<Document>) =>
       withTransaction(async (session) => {
         const before = await collection.findOne(filter, { session })
         if (!before) return null
-
         const { userId } = getContext()
-
-        // Suppression du doc
-        await collection.deleteOne({ _id: before._id }, { session })
+        const response = await collection.deleteOne({ _id: before._id }, { session })
         // audit de la suppression
         await audit.insertOne(entry("delete", before._id, diff(before, {}), userId ?? "system"), { session })
-        return before
-      }),
+        return response
+      }).catch(console.error),
   }
 }

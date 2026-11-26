@@ -99,6 +99,4 @@ Sur le POC, il existe une page qui liste les différences entre les rôles de go
 
 Pour un espace donné, la première personne (hors rôle lecteur) à se connecter sur l'espace doit revalider, un par un, les utilisateurs de cet espace du millésime précédent. Cela est bloquant pour les autres personnes qui souhaitent de connecter à cet espace.
 
-.png
-
 ![Schéma types d'espaces et rôles utilisateurs](./docs/spaces.png)

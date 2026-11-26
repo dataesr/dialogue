@@ -51,7 +51,7 @@ export default function Spaces({ spaces = [] }: { spaces: SpaceLight[] }) {
           <tr>
             <th>Etablissement</th>
             <th>Type</th>
-            <th>Date de fin</th>
+            <th>Fermeture</th>
             <th>Actions</th>
           </tr>
         </thead>

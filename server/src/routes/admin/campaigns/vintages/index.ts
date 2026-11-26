@@ -1,7 +1,7 @@
 import { Router } from "express"
 import { ObjectId } from "mongodb"
 
-import { auditedCollection } from "../../../../services/auditedCollection.ts"
+import { auditedCollection as audit } from "../../../../services/auditedCollection.ts"
 import { db } from "../../../../services/mongo.ts"
 import type { Vintage, VintageNew } from "../../../../types/vintage.ts"
 import stagesRoutes from "./spaces/index.ts"
@@ -9,7 +9,7 @@ import stagesRoutes from "./spaces/index.ts"
 const router = Router()
 const collection = "vintages"
 const prefix = `/admin/campaigns/:campaignId/${collection}`
-const auditedVintages = auditedCollection(collection)
+const auditedCollection = audit(collection)
 
 // /admin/campaigns/:campaignId/vintages
 router.route(prefix)
@@ -62,7 +62,7 @@ router.route(prefix)
     const errors: { name?: string, status?: string } = {}
     if (vintage.name.length < 2 || vintage.name.length > 255) errors.name = "The vintage name should have 2 to 255 characters"
     if (Object.keys(errors).length > 0) return res.status(304).json({ message: Object.values(errors).join(" // ") })
-    const response = await auditedVintages.insertOne(vintage)
+    const response = await auditedCollection.insertOne(vintage)
     res.status(201).json({
       message: `Vintage ${vintage.name} added. id: ${response?.insertedId}`,
     })
@@ -93,7 +93,7 @@ router.route(`${prefix}/:vintageId`)
     if (vintage.name.length < 2 || vintage.name.length > 255) errors.name = "The campaign name should have 2 to 255 characters"
     if (Object.keys(errors).length > 0) return res.status(304).json({ message: Object.values(errors).join(" // ") })
     const vintageId = new ObjectId(_id)
-    const response = await auditedVintages.updateOne({ _id: vintageId }, { $set: { ...vintage } })
+    const response = await auditedCollection.updateOne({ _id: vintageId }, { $set: { ...vintage } })
     res.status(200).json({
       message: `Vintage ${vintage.name} modified. id: ${response?._id}`,
     })
@@ -101,7 +101,7 @@ router.route(`${prefix}/:vintageId`)
   // TODO: Delete linked spaces
   .delete(async (req, res) => {
     const _id = new ObjectId(req.params.vintageId)
-    const response = await auditedVintages.deleteOne({ _id })
+    const response = await auditedCollection.deleteOne({ _id })
     res.status(200).json({
       message: `Vintage deleted. Number of vintages deleted: ${response?.deletedCount}`
     })

@@ -19,6 +19,14 @@ const VINTAGE_STATUS = [
   { key: "archived", label: "Archivée" },
 ]
 
+const VINTAGE_STATUS_DISABLED = {
+  draft: ["closed", "archived"],
+  test: ["closed", "archived"],
+  published: ["draft", "test", "archived"],
+  closed: ["draft", "test"],
+  archived: ["draft", "test", "published"],
+}
+
 type VintageForm = Omit<VintageNew, 'campaignId' | 'closesAt' | 'opensAt'> & {
   campaignId: string
   closesAt: string
@@ -98,7 +106,7 @@ export default function VintageForm({ onSubmit = () => { }, v }: { onSubmit?: ()
       />
       <Select
         aria-label="Statut"
-        disabledKeys={["draft"]}
+        disabledKeys={VINTAGE_STATUS_DISABLED?.[vintage.status] ?? []}
         isRequired
         label="Statut"
         message={(showErrors && errors?.status) ? <>{errors.status}</> : null}

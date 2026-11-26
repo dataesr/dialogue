@@ -1,13 +1,13 @@
 import { Router } from "express"
 
-import { auditedCollection } from "../../../services/auditedCollection.ts"
+import { auditedCollection as audit } from "../../../services/auditedCollection.ts"
 import { db } from "../../../services/mongo.ts"
 import type { UserNew } from "../../../types/user.ts"
 
 const router = Router()
 const collection = "users"
 const prefix = `/admin/${collection}`
-const auditedUsers = auditedCollection(collection)
+const auditedCollection = audit(collection)
 
 // /admin/users
 router
@@ -24,7 +24,7 @@ router
       lastName: req.body.lastName,
       role: "user",
     }
-    const response = await auditedUsers.insertOne(user)
+    const response = await auditedCollection.insertOne(user)
     res.status(201).json({
       message: `User ${user.firstName} ${user.lastName} added. id: ${response?.insertedId}`,
     })

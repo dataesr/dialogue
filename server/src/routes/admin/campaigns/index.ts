@@ -1,7 +1,7 @@
 import { Router } from "express"
 import { ObjectId } from "mongodb"
 
-import { auditedCollection } from "../../../services/auditedCollection.ts"
+import { auditedCollection as audit } from "../../../services/auditedCollection.ts"
 import { db } from "../../../services/mongo.ts"
 import type { Campaign, CampaignNew } from "../../../types/campaign.ts"
 import vintagesRoutes from "./vintages/index.ts"
@@ -9,7 +9,7 @@ import vintagesRoutes from "./vintages/index.ts"
 const router = Router()
 const collection = "campaigns"
 const prefix = `/admin/${collection}`
-const auditedCampaigns = auditedCollection(collection)
+const auditedCollection = audit(collection)
 
 // /admin/campaigns
 router.route(prefix)
@@ -54,7 +54,7 @@ router.route(prefix)
     if (campaign.name.length < 2 || campaign.name.length > 255) errors.name = "The campaign name should have 2 to 255 characters"
     if (campaign?.shortName && (campaign.shortName.length < 2 || campaign.shortName.length > 64)) errors.shortName = "The campaign name should have 2 to 255 characters"
     if (Object.keys(errors).length > 0) return res.status(304).json({ message: Object.values(errors).join(" // ") })
-    const response = await auditedCampaigns.insertOne(campaign)
+    const response = await auditedCollection.insertOne(campaign)
     res.status(201).json({
       message: `Campaign ${campaign.name} added. id: ${response?.insertedId}`,
     })
@@ -86,7 +86,7 @@ router.route(`${prefix}/:campaignId`)
     if (campaign?.shortName && (campaign.shortName.length < 2 || campaign.shortName.length > 64)) errors.shortName = "The campaign name should have 2 to 255 characters"
     if (Object.keys(errors).length > 0) return res.status(304).json({ message: Object.values(errors).join(" // ") })
     const campaignId = new ObjectId(_id)
-    const response = await auditedCampaigns.updateOne({ _id: campaignId }, { $set: { ...campaign } })
+    const response = await auditedCollection.updateOne({ _id: campaignId }, { $set: { ...campaign } })
     res.status(200).json({
       message: `Campaign ${campaign.name} modified. id: ${response?._id}`,
     })
@@ -94,7 +94,7 @@ router.route(`${prefix}/:campaignId`)
   // TODO: Delete linked vintages
   .delete(async (req, res) => {
     const _id = new ObjectId(req.params.campaignId)
-    const response = await auditedCampaigns.deleteOne({ _id })
+    const response = await auditedCollection.deleteOne({ _id })
     res.status(200).json({
       message: `Campaign deleted. Number of campaigns deleted: ${response?.deletedCount}`
     })

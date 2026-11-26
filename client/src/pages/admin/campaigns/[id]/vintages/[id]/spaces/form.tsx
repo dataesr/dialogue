@@ -18,13 +18,18 @@ const SPACE_TYPE = [
   { key: "admin", label: "Administrateur" },
 ]
 
+type SpaceForm = Omit<SpaceNew, 'closedAt' | 'vintageId'> & {
+  closedAt: string
+  vintageId: string
+}
+
 export default function SpaceForm({ onSubmit = () => { }, s }: { onSubmit?: () => void, s?: Space }) {
   const navigate = useNavigate()
   const { campaignId, vintageId } = useParams()
-  const defaultSpace: SpaceNew = { structureId: "", type: "reponse" }
+  const defaultSpace: SpaceForm = { closedAt: new Date().toISOString().slice(0, 16), structureId: "", type: "reponse", vintageId: vintageId ?? "" }
   const [errors, setErrors] = useState<{ [key: string]: unknown }>({})
   const [showErrors, setShowErrors] = useState<boolean>(false)
-  const [space, setSpace] = useState<SpaceNew>(s ?? defaultSpace)
+  const [space, setSpace] = useState<SpaceForm>(s ?? defaultSpace)
 
   const resetForm = () => {
     if (!s) setSpace(defaultSpace)
@@ -86,6 +91,12 @@ export default function SpaceForm({ onSubmit = () => { }, s }: { onSubmit?: () =
         onChange={(e) => { e.preventDefault(); setSpace({ ...space, structureId: e.target.value }) }}
         required
         value={space.structureId}
+      />
+      <TextInput
+        label="Fermeture"
+        onChange={(e) => { e.preventDefault(); setSpace({ ...space, closedAt: e.target.value }) }}
+        type="datetime-local"
+        value={(space?.closedAt ?? new Date())?.toString() ?? ""}
       />
       <ButtonGroup isInlineFrom="xs" align="right">
         {s && <Button onClick={() => handleDelete()} color="error">Supprimer</Button>}

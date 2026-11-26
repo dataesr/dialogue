@@ -1,14 +1,14 @@
 import { Router } from "express"
 import { ObjectId } from "mongodb"
 
-import { auditedCollection } from "../../../../../services/auditedCollection.ts"
+import { auditedCollection as audit } from "../../../../../services/auditedCollection.ts"
 import { db } from "../../../../../services/mongo.ts"
 import type { Space, SpaceNew } from "../../../../../types/space.ts"
 
 const router = Router()
 const collection = "spaces"
 const prefix = `/admin/campaigns/:campaignId/vintages/:vintageId/${collection}`
-const auditedSpaces = auditedCollection(collection)
+const auditedCollection = audit(collection)
 
 // /admin/campaigns/:campaignId/vintages/:vintageId/spaces
 router.route(prefix)
@@ -27,7 +27,7 @@ router.route(prefix)
     if (req.body?.closedAt) space.closedAt = req.body.closedAt
     if (req.body?.closedBy) space.closedBy = req.body.closedBy
     if (req.body?.closureReason) space.closureReason = req.body.closureReason
-    const response = await auditedSpaces.insertOne(space)
+    const response = await auditedCollection.insertOne(space)
     res.status(201).json({
       message: `Space added. id: ${response?.insertedId}`,
     })
@@ -51,14 +51,14 @@ router.route(`${prefix}/:spaceId`)
     // if (vintage.name.length < 2 || vintage.name.length > 255) errors.name = "The campaign name should have 2 to 255 characters"
     // if (Object.keys(errors).length > 0) return res.status(304).json({ message: Object.values(errors).join(" // ") })
     const spaceId = new ObjectId(_id)
-    const response = await auditedSpaces.updateOne({ _id: spaceId }, { $set: { ...space } })
+    const response = await auditedCollection.updateOne({ _id: spaceId }, { $set: { ...space } })
     res.status(200).json({
       message: `Space modified. id: ${response?._id}`,
     })
   })
   .delete(async (req, res) => {
     const _id = new ObjectId(req.params.spaceId)
-    const response = await auditedSpaces.deleteOne({ _id })
+    const response = await auditedCollection.deleteOne({ _id })
     res.status(200).json({
       message: `Space deleted. Number of spaces deleted: ${response?.deletedCount}`
     })

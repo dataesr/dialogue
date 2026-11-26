@@ -12,6 +12,13 @@ import { useParams } from "react-router-dom"
 import type { SpaceLight } from "../../../../../../../../../server/src/types/spaces"
 import SpaceForm from "./form"
 
+const SPACE_TYPE = [
+  { key: "reponse", label: "Répondant" },
+  { key: "supervision_s", label: "Superviseur niveau 1" },
+  { key: "supervision_v", label: "Superviseur niveau 2" },
+  { key: "admin", label: "Administrateur" },
+]
+
 export default function Spaces({ spaces = [] }: { spaces: SpaceLight[] }) {
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const queryClient = useQueryClient()
@@ -32,12 +39,14 @@ export default function Spaces({ spaces = [] }: { spaces: SpaceLight[] }) {
       <table className="fr-table">
         <thead>
           <tr>
+            <th>Type</th>
             <th>structureId</th>
           </tr>
         </thead>
         <tbody>
           {(spaces ?? []).map((space: SpaceLight) => (
             <tr key={space._id.toString()}>
+              <td>{SPACE_TYPE.find((item) => item.key === space.type)?.label ?? "Type inconnu"}</td>
               <td>{space.structureId.toString()}</td>
             </tr>
           ))}

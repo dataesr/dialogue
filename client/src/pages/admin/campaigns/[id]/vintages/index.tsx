@@ -41,18 +41,20 @@ export default function Vintages({ vintages = [] }: { vintages: VintageLight[] }
         <thead>
           <tr>
             <th>Nom</th>
+            <th>Statut</th>
             <th>Ouverture</th>
             <th>Fermeture</th>
-            <th>Statut</th>
+            <th>Espaces</th>
           </tr>
         </thead>
         <tbody>
           {(vintages ?? []).map((vintage: VintageLight) => (
             <tr key={vintage._id.toString()}>
               <td><a href={`./${campaignId}/millesimes/${vintage._id}`}>{vintage.name}</a></td>
-              <td>{vintage.opensAt?.toDateString()}</td>
-              <td>{vintage.closesAt?.toDateString()}</td>
               <td>{VINTAGE_STATUS.find((item) => item.key === vintage.status)?.label ?? "Statut inconnu"}</td>
+              <td>{vintage?.opensAt?.toString()}</td>
+              <td>{vintage?.closesAt?.toString()}</td>
+              <td>{vintage.numberOfSpaces}</td>
             </tr>
           ))}
         </tbody>

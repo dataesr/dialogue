@@ -38,6 +38,7 @@ export default function Vintage() {
       {!isError && !isLoading && (
         <>
           <Title className="fr-my-3w">Millésime{vintage && ` ${vintage.name}`}</Title>
+          <Text className="fr-text-mention--grey" size="xs"><i>Dernière modification le {vintage.modifiedAt} par {vintage.modifiedBy}</i></Text>
           <VintageForm onSubmit={() => { queryClient.invalidateQueries({ queryKey: ["campaigns", campaignId, "vintages", vintageId] }) }} v={vintage} />
           <Spaces spaces={vintage?.spaces ?? []} />
         </>

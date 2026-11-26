@@ -38,6 +38,7 @@ export default function Campaign() {
       {!isError && !isLoading && (
         <>
           <Title className="fr-my-3w">Campagne{campaign && ` ${campaign.name}`}</Title>
+          <Text className="fr-text-mention--grey" size="xs"><i>Dernière modification le {campaign.modifiedAt} par {campaign.modifiedBy}</i></Text>
           <CampaignForm c={campaign} onSubmit={() => { queryClient.invalidateQueries({ queryKey: ["campaigns", campaignId] }); queryClient.invalidateQueries({ queryKey: ["campaigns"], exact: true }) }}/>
           <Vintages vintages={campaign?.vintages ?? []} />
         </>

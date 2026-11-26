@@ -1,6 +1,6 @@
 import type { ObjectId } from "mongodb"
 
-type SpaceType = "reponse" | "supervision_s" | "supervision_v"
+export type SpaceType = "reponse" | "supervision_s" | "supervision_v" | "admin"
 
 export interface Space {
   _id: ObjectId

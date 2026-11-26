@@ -59,6 +59,10 @@ To deploy in production, simply run this command from your staging branch :
   - Publiée -> published
   - Fermée -> closed
   - Archivée -> archived
+- Espaces -> spaces
+  - reponse -> Répondant
+  - supervision_s -> Superviseur niveau 1
+  - supervision_v -> Superviseur niveau 2
 
 
 ## Users
@@ -73,25 +77,24 @@ Espace = millésime x établissement x type d'espace
 - Superviseur niveau 2 (plutôt le ministère et les MOA des différentes campagnes, donc gère tous les établissements qui participent à la campagne)
 - Admin (Yann, Alexandra & Mialy, gestion des codes d'inviation, ajout ou suppression d'utilisateurs de l'administration, gestion des droits de ces utilisateurs ...)
 
-4 rôles associés à des espaces de type "contribution"
+4 rôles associés à des espaces de type "Contribution"
 - Lecteur
 - Répondant
 - Répondant plus (Rôle disponible uniquement dans certaines campagnes, est un contributeur avec des rôles en plus (par exemple classer des fiches-projets, elles même rédigées par les contributeurs))
 - Valideur
 
-Chaque rôle peut voir la liste des campagnes en cours, en test ou passées de ses espaces. Un utilisateur peut se créer un compte sur Dialogue, donc avec le millésime lié. Un même utilisateur peut avoir accès à plusieurs millésimes dans ce cas, sa page d'accueil liste les millésimes des différentes campagnes auxquels il appartient.
+Chaque rôle peut voir la liste des campagnes en cours, en test ou passées des espaces auxquels il est rattaché. Un utilisateur peut se créer un compte sur Dialogue, donc avec l'espace lié. Un même utilisateur peut avoir accès à plusieurs espaces de plusieurs millésimes. Dans ce cas, sa page d'accueil liste les espaces des millésimes des différentes campagnes auxquels il appartient / a accès.
 
-Un même établissement peut exister au sein d'espaces différents dans un millésime. Avec donc des rôles différents.
+Un même établissement peut exister au sein d'espaces différents dans un millésime. Avec donc des types différents.
 
-Un code d'invitation peut être saisi dans l'UI de réponse de Dialogue. Paysage assure le lien entre un nom de domaine d'adresse email et une structure (et donc un espace). Chaque code est lié à un millésime d'une campagne et un rôle, et en fonction du domaine de l'adresse email on est rattaché à une structure. Donc une fois le code saisi, j'arrive dans l'espace dédié et là je peux répondre à l'enquête.
+Un code d'invitation peut être saisi dans l'UI de réponse de Dialogue.
 
-Un utilisateur de Dialogue peut inviter par email des utilisteurs avec un rôle identique ou "inférieur" au sien. Par exemple, un superviseur peut inviter des utilisateurs avec un rôle lecteur, contributeur ou superviseur.
+Paysage assure le lien entre un nom de domaine d'adresse email et une structure (et donc un espace). Chaque code est lié à un millésime d'une campagne et un rôle, et en fonction du domaine de l'adresse email on est rattaché à une structure. Donc une fois le code saisi, j'arrive dans l'espace dédié et là je peux répondre à l'enquête.
 
-Pour les rôles de validateurs, le process est différent. Cf Paysage et l'équipe de direction avec les adresses emailsde la directeur / directrice qui sont immédiatement ajoutés comme valideurs.
+Un utilisateur de Dialogue peut en inviter un autre par email, ces utilisteurs auront un rôle identique ou "inférieur" au sien. Par exemple, un superviseur peut inviter des utilisateurs avec un rôle lecteur, contributeur ou superviseur.
 
-Sur le POC, il existe une page qui liste les différences entre les rôles de gouvernance dans Paysage et les rôles de valideurs dans Paysage (attention aux dates de validation): https://dialogue.dataesr.fr/admin/paysage/domaines.
+Pour les rôles de validateurs, le process est différent. Cf. Paysage et l'équipe de direction de la structure avec les adresses emails de la directrice / du directue rqui sont immédiatement ajoutés comme valideurs.
 
-Pour un espace donné, la première personne (sauf rôle lecteur) à se connecter sur l'espace doit revalider, un par un, les utilisateurs de cet espace du millésime précédent. Cela est bloquant pour les autres personnes qui souhaitent de connecter à cet esapce. A voir comment faire techniquement
+Sur le POC, il existe une page qui liste les différences entre les rôles de gouvernance dans Paysage et les rôles de valideurs dans Paysage (attention aux dates de validation): https://dialogue.dataesr.fr/admin/paysage/domaines. Donc soulève de potentiels problèmes.
 
-
-Problématiques de performances
+Pour un espace donné, la première personne (hors rôle lecteur) à se connecter sur l'espace doit revalider, un par un, les utilisateurs de cet espace du millésime précédent. Cela est bloquant pour les autres personnes qui souhaitent de connecter à cet espace.

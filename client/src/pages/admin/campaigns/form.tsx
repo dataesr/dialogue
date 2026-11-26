@@ -21,7 +21,7 @@ const CAMPAIGN_VALIDATIONS = [
   { key: "locking", label: "Validation bloquante" },
 ]
 
-const defaultCampaign: CampaignForm = { name: "", shortName: undefined, tagline: undefined, validation: "" }
+const defaultCampaign: CampaignForm = { name: "", shortName: "", tagline: "", validation: "" }
 
 export default function CampaignForm({ c, onSubmit = () => { } }: { c?: Campaign, onSubmit?: () => void }) {
   const [campaign, setCampaign] = useState<CampaignForm>(c ?? defaultCampaign)

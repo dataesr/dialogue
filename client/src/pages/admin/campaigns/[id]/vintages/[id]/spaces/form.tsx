@@ -1,18 +1,27 @@
 import {
   Button,
   ButtonGroup,
+  Select,
+  SelectOption,
   TextInput,
 } from "@dataesr/dsfr-plus"
 import { useState } from "react"
 import { useNavigate } from "react-router"
 import { useParams } from "react-router-dom"
 
-import type { Space, SpaceNew } from "../../../../../../../../../server/src/types/spaces"
+import type { Space, SpaceNew, SpaceType } from "../../../../../../../../../server/src/types/spaces"
+
+const SPACE_TYPE = [
+  { key: "reponse", label: "Répondant" },
+  { key: "supervision_s", label: "Superviseur de niveau 1" },
+  { key: "supervision_v", label: "Superviseur de niveau 2" },
+  { key: "admin", label: "Administrateur" },
+]
 
 export default function SpaceForm({ onSubmit = () => { }, s }: { onSubmit?: () => void, s?: Space }) {
   const navigate = useNavigate()
   const { campaignId, vintageId } = useParams()
-  const defaultSpace: SpaceNew = { structureId: "" }
+  const defaultSpace: SpaceNew = { structureId: "", type: "reponse" }
   const [errors, setErrors] = useState<{ [key: string]: unknown }>({})
   const [showErrors, setShowErrors] = useState<boolean>(false)
   const [space, setSpace] = useState<SpaceNew>(s ?? defaultSpace)
@@ -57,6 +66,18 @@ export default function SpaceForm({ onSubmit = () => { }, s }: { onSubmit?: () =
 
   return (
     <form onSubmit={handleSubmit}>
+      <Select
+        aria-label="Type"
+        disabledKeys={[""]}
+        isRequired
+        label="Type"
+        message={(showErrors && errors?.type) ? <>{errors.type}</> : null}
+        messageType={(showErrors && errors?.type) ? "error" : null}
+        onChange={(e) => setSpace({ ...space, type: e as SpaceType })}
+        value={space.type}
+      >
+        {SPACE_TYPE.map(({ key, label }) => <SelectOption key={key}>{label}</SelectOption>)}
+      </Select>
       <TextInput
         hint="2 à 255 caractères"
         label="Structure ID"

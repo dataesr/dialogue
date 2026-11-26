@@ -19,13 +19,19 @@ const VINTAGE_STATUS = [
   { key: "archived", label: "Archivée" },
 ]
 
+type VintageForm = Omit<VintageNew, 'campaignId' | 'closesAt' | 'opensAt'> & {
+  campaignId: string
+  closesAt: string
+  opensAt: string
+}
+
 export default function VintageForm({ onSubmit = () => { }, v }: { onSubmit?: () => void, v?: Vintage }) {
   const navigate = useNavigate()
   const { campaignId } = useParams()
-  const defaultVintage: VintageNew = { campaignId, name: "", status: "draft" }
+  const defaultVintage: VintageForm = { campaignId: campaignId ?? "", closesAt: new Date().toISOString().slice(0, 16), name: "", opensAt: new Date().toISOString().slice(0, 16), status: "draft" }
   const [errors, setErrors] = useState<{ [key: string]: unknown }>({})
   const [showErrors, setShowErrors] = useState<boolean>(false)
-  const [vintage, setVintage] = useState<VintageNew>(v ?? defaultVintage)
+  const [vintage, setVintage] = useState<VintageForm>(v ?? defaultVintage)
 
   const resetForm = () => {
     if (!v) setVintage(defaultVintage)
@@ -80,15 +86,15 @@ export default function VintageForm({ onSubmit = () => { }, v }: { onSubmit?: ()
       />
       <TextInput
         label="Ouverture"
-        onChange={(e) => { e.preventDefault(); setVintage({ ...vintage, opensAt: new Date(e.target.value) }) }}
+        onChange={(e) => { e.preventDefault(); console.log("update", "***", e.target.value, "***"); setVintage({ ...vintage, opensAt: e.target.value }) }}
         type="datetime-local"
-        value={vintage.opensAt?.toDateString()}
+        value={(vintage?.opensAt ?? new Date())?.toString() ?? ""}
       />
       <TextInput
         label="Fermeture"
-        onChange={(e) => { e.preventDefault(); setVintage({ ...vintage, closesAt: new Date(e.target.value) }) }}
+        onChange={(e) => { e.preventDefault(); setVintage({ ...vintage, closesAt: e.target.value }) }}
         type="datetime-local"
-        value={vintage.closesAt?.toDateString()}
+        value={(vintage?.closesAt ?? new Date())?.toString() ?? ""}
       />
       <Select
         aria-label="Statut"

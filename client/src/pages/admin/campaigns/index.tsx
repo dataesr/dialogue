@@ -59,7 +59,7 @@ export default function Campaigns() {
               <th>Nom court</th>
               <th>Accroche</th>
               <th>Mode de validation</th>
-              <th>Nombre de millésimes</th>
+              <th>Millésimes</th>
             </tr>
           </thead>
           <tbody>

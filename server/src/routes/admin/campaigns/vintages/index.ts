@@ -4,6 +4,7 @@ import { ObjectId } from "mongodb"
 import { auditedCollection } from "../../../../services/auditedCollection.ts"
 import { db } from "../../../../services/mongo.ts"
 import type { Vintage, VintageNew } from "../../../../types/vintage.ts"
+import stagesRoutes from "./spaces/index.ts"
 
 const router = Router()
 const collection = "vintages"
@@ -14,7 +15,39 @@ const auditedCampaigns = auditedCollection(collection)
 router.route(prefix)
   .get(async (req, res) => {
     const campaignId = new ObjectId(req.params.campaignId)
-    const response = await db.collection(collection).find({ campaignId }).toArray()
+    const response = await db.collection(collection).aggregate([
+      { $match: { campaignId } },
+      {
+        $project: {
+          modifiedAt: 0,
+          modifiedBy: 0,
+        }
+      },
+      {
+        $lookup: {
+          from: "spaces",
+          localField: "_id",
+          foreignField: "vintageId",
+          as: "spaces",
+        }
+      },
+      {
+        $project: {
+          _id: 1,
+          affiliationType: 1,
+          campaignId: 1,
+          closesAt: 1,
+          description: 1,
+          name: 1,
+          numberOfSpaces: { $size: "$spaces" },
+          opensAt: 1,
+          publishedAt: 1,
+          shortDescription: 1,
+          spaces: 1,
+          status: 1,
+        }
+      }
+    ]).toArray()
     res.json(response)
   })
   .post(async (req, res) => {
@@ -24,8 +57,8 @@ router.route(prefix)
       name: req.body.name,
       status: req.body.status,
     }
-    if (req.body?.closingDate) vintage.closingDate = req.body.closingDate
-    if (req.body?.openingDate) vintage.openingDate = req.body.openingDate
+    if (req.body?.closesAt) vintage.closesAt = req.body.closesAt
+    if (req.body?.opensAt) vintage.opensAt = req.body.opensAt
     const errors: { name?: string, status?: string } = {}
     if (vintage.name.length < 2 || vintage.name.length > 255) errors.name = "The vintage name should have 2 to 255 characters"
     if (Object.keys(errors).length > 0) return res.status(304).json({ message: Object.values(errors).join(" // ") })
@@ -44,8 +77,15 @@ router.route(`${prefix}/:vintageId`)
     const response = await db.collection(collection).aggregate([
       { $match: { _id } },
       { $limit: 1 },
-    ])
-      .toArray()
+      {
+        $lookup: {
+          from: "spaces",
+          localField: "_id",
+          foreignField: "vintageId",
+          as: "spaces",
+        },
+      },
+    ]).toArray()
     if (response.length === 1) return res.status(200).json(response[0])
     res.status(404).json({ message: `No vintage found with id ${_id}` })
   })
@@ -71,5 +111,7 @@ router.route(`${prefix}/:vintageId`)
       message: `Vintage deleted. id: ${_id}`
     })
   })
+
+router.use(stagesRoutes)
 
 export default router

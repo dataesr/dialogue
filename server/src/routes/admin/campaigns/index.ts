@@ -4,7 +4,7 @@ import { ObjectId } from "mongodb"
 import { auditedCollection } from "../../../services/auditedCollection.ts"
 import { db } from "../../../services/mongo.ts"
 import type { Campaign, CampaignNew } from "../../../types/campaign.ts"
-import vintageRoutes from "./vintages/index.ts"
+import vintagesRoutes from "./vintages/index.ts"
 
 const router = Router()
 const collection = "campaigns"
@@ -18,8 +18,8 @@ router.route(prefix)
       { $match: {} },
       {
         $project: {
-          createdAt: 0,
-          createdBy: 0,
+          modifiedAt: 0,
+          modifiedBy: 0,
         }
       },
       {
@@ -34,10 +34,10 @@ router.route(prefix)
         $project: {
           _id: 1,
           name: 1,
+          numberOfVintages: { $size: "$vintages" },
           shortName: 1,
           tagline: 1,
           validation: 1,
-          numberOfVintages: { $size: "$vintages" },
         }
       }
     ]).toArray()
@@ -46,7 +46,6 @@ router.route(prefix)
   .post(async (req, res) => {
     const campaign: CampaignNew = {
       name: req.body.name,
-      numberOfVintages: 0,
       validation: req.body.validation,
     }
     if (req.body?.shortName) campaign.shortName = req.body.shortName
@@ -78,8 +77,7 @@ router.route(`${prefix}/:campaignId`)
           as: "vintages",
         },
       },
-    ])
-      .toArray()
+    ]).toArray()
     if (response.length === 1) return res.status(200).json(response[0])
     res.status(404).json({ message: `No campaign found with id ${_id}` })
   })
@@ -108,6 +106,6 @@ router.route(`${prefix}/:campaignId`)
     })
   })
 
-router.use(vintageRoutes)
+router.use(vintagesRoutes)
 
 export default router

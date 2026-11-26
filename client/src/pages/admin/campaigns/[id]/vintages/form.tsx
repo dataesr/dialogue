@@ -7,7 +7,7 @@ import {
 } from "@dataesr/dsfr-plus"
 import { useState } from "react"
 import { useNavigate } from "react-router"
-import { useLocation } from "react-router-dom"
+import { useParams } from "react-router-dom"
 
 import type { Vintage, VintageNew, VintageStatus } from "../../../../../../../server/src/types/vintage"
 
@@ -21,15 +21,14 @@ const VINTAGE_STATUS = [
 
 export default function VintageForm({ onSubmit = () => { }, v }: { onSubmit?: () => void, v?: Vintage }) {
   const navigate = useNavigate()
-  const { pathname } = useLocation()
-  const campaignId = pathname.split("/")[2]
-  const defaultVintage: VintageNew = { name: "", status: "draft" }
+  const { campaignId } = useParams()
+  const defaultVintage: VintageNew = { campaignId, name: "", status: "draft" }
   const [errors, setErrors] = useState<{ [key: string]: unknown }>({})
   const [showErrors, setShowErrors] = useState<boolean>(false)
   const [vintage, setVintage] = useState<VintageNew>(v ?? defaultVintage)
 
   const resetForm = () => {
-    setVintage(defaultVintage)
+    if (!v) setVintage(defaultVintage)
     setErrors({})
     setShowErrors(false)
   }
@@ -83,13 +82,13 @@ export default function VintageForm({ onSubmit = () => { }, v }: { onSubmit?: ()
         label="Ouverture"
         onChange={(e) => { e.preventDefault(); setVintage({ ...vintage, opensAt: new Date(e.target.value) }) }}
         type="datetime-local"
-        value={vintage.opensAt?.toString()}
+        value={vintage.opensAt?.toDateString()}
       />
       <TextInput
         label="Fermeture"
         onChange={(e) => { e.preventDefault(); setVintage({ ...vintage, closesAt: new Date(e.target.value) }) }}
         type="datetime-local"
-        value={vintage.closesAt?.toString()}
+        value={vintage.closesAt?.toDateString()}
       />
       <Select
         aria-label="Statut"

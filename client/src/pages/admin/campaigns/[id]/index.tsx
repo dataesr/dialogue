@@ -7,17 +7,17 @@ import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
 import { useParams } from "react-router-dom"
 
-import type { CampaignLight, CampaignValidation } from "../../../../../../server/src/types/campaign"
+import type { Campaign, CampaignValidation } from "../../../../../../server/src/types/campaign"
 import Vintages from "./vintages"
 import CampaignForm from "../form"
 
-type CampaignTypeForm = Omit<Omit<CampaignLight, "validation">, "_id"> & {
+type CampaignForm = Omit<Campaign, "validation"> & {
   validation: CampaignValidation | ""
 }
 
 export default function Campaign() {
   const { campaignId } = useParams()
-  const [campaign, setCampaign] = useState<CampaignTypeForm>({ name: "", validation: "" })
+  const [campaign, setCampaign] = useState<CampaignForm>({ name: "", validation: "" })
   const queryClient = useQueryClient()
 
   const { isError, isLoading } = useQuery({
@@ -25,9 +25,9 @@ export default function Campaign() {
     queryFn: async () => {
       const response = await fetch(`/api/admin/campaigns/${campaignId}`)
       if (!response.ok) throw new Error(`Erreur ${response.status}`)
-      const campaignTmp = await response.json()
-      setCampaign(campaignTmp)
-      return campaignTmp
+      const _campaign = await response.json()
+      setCampaign(_campaign)
+      return ""
     }
   })
 
@@ -37,9 +37,9 @@ export default function Campaign() {
       {!isError && isLoading && <Text>Chargement de la campagne...</Text>}
       {!isError && !isLoading && (
         <>
-          <Title className="fr-my-3w">Campagne</Title>
+          <Title className="fr-my-3w">Campagne{campaign && ` ${campaign.name}`}</Title>
           <CampaignForm c={campaign} onSubmit={() => { queryClient.invalidateQueries({ queryKey: ["campaigns", campaignId] }); queryClient.invalidateQueries({ queryKey: ["campaigns"], exact: true }) }}/>
-          <Vintages campaignId={campaignId} vintages={campaign?.vintages ?? []} />
+          <Vintages vintages={campaign?.vintages ?? []} />
         </>
       )}
     </>

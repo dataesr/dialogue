@@ -7,6 +7,7 @@ import {
 } from "@dataesr/dsfr-plus"
 import { useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
+import { useParams } from "react-router-dom"
 
 import type { VintageLight } from "../../../../../../../server/src/types/vintage"
 import VintageForm from "./form"
@@ -19,9 +20,10 @@ const VINTAGE_STATUS = [
   { key: "archived", label: "Archivée" },
 ]
 
-export default function Vintages({ campaignId, vintages = [] }: { campaignId?: string, vintages: VintageLight[] }) {
+export default function Vintages({ vintages = [] }: { vintages: VintageLight[] }) {
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const queryClient = useQueryClient()
+  const { campaignId } = useParams()
 
   return (
     <>
@@ -48,8 +50,8 @@ export default function Vintages({ campaignId, vintages = [] }: { campaignId?: s
           {(vintages ?? []).map((vintage: VintageLight) => (
             <tr key={vintage._id.toString()}>
               <td><a href={`./${campaignId}/millesimes/${vintage._id}`}>{vintage.name}</a></td>
-              <td>{vintage.openingDate}</td>
-              <td>{vintage.closingDate}</td>
+              <td>{vintage.opensAt?.toDateString()}</td>
+              <td>{vintage.closesAt?.toDateString()}</td>
               <td>{VINTAGE_STATUS.find((item) => item.key === vintage.status)?.label ?? "Statut inconnu"}</td>
             </tr>
           ))}

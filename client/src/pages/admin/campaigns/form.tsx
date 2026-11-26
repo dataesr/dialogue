@@ -15,7 +15,7 @@ type CampaignForm = Omit<CampaignNew, "validation"> & {
 }
 
 const CAMPAIGN_VALIDATIONS = [
-  { key: "", value: "", },
+  { key: "", value: "-", },
   { key: "none", label: "Sans validation" },
   { key: "declarative", label: "Validation déclarative" },
   { key: "locking", label: "Validation bloquante" },

@@ -63,6 +63,7 @@ To deploy in production, simply run this command from your staging branch :
   - reponse -> Répondant
   - supervision_s -> Superviseur niveau 1
   - supervision_v -> Superviseur niveau 2
+- Etablissements -> structures
 
 
 ## Users

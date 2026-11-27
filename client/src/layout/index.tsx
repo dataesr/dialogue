@@ -31,6 +31,9 @@ export default function Layout() {
           <Link current={pathname === "/logs"} href="/logs">
             Logs
           </Link>
+          <Link current={pathname === "/etablissements"} href="/etablissements">
+            Etablissements
+          </Link>
         </Nav>
       </Header>
       <Container as="main" id="content">

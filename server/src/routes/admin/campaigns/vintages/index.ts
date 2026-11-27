@@ -10,8 +10,8 @@ const router = Router()
 const collection = "vintages"
 const prefix = `/admin/campaigns/:campaignId/${collection}`
 const auditedCollection = audit(collection)
-const childrenCollection = "spaces"
-const childrenAuditedCollection = audit(childrenCollection)
+const spacesCollection = "spaces"
+const spacesAuditedCollection = audit(spacesCollection)
 
 // /admin/campaigns/:campaignId/vintages
 router.route(prefix)
@@ -63,7 +63,7 @@ router.route(prefix)
     if (req.body?.opensAt) vintage.opensAt = req.body.opensAt
     const errors: { name?: string, status?: string } = {}
     if (vintage.name.length < 2 || vintage.name.length > 255) errors.name = "The vintage name should have 2 to 255 characters"
-    if (Object.keys(errors).length > 0) return res.status(304).json({ message: Object.values(errors).join(" // ") })
+    if (Object.keys(errors).length > 0) return res.status(304).json({ message: Object.values(errors).join("\n") })
     const response = await auditedCollection.insertOne(vintage)
     res.status(201).json({
       message: `Vintage ${vintage.name} added. id: ${response?.insertedId}`,
@@ -93,7 +93,7 @@ router.route(`${prefix}/:vintageId`)
     const { _id: _, ...vintage }: Vintage = req.body
     const errors: { name?: string, status?: string } = {}
     if (vintage.name.length < 2 || vintage.name.length > 255) errors.name = "The campaign name should have 2 to 255 characters"
-    if (Object.keys(errors).length > 0) return res.status(304).json({ message: Object.values(errors).join(" // ") })
+    if (Object.keys(errors).length > 0) return res.status(304).json({ message: Object.values(errors).join("\n") })
     const vintageId = new ObjectId(_id)
     const response = await auditedCollection.updateOne({ _id: vintageId }, { $set: { ...vintage } })
     res.status(200).json({
@@ -102,14 +102,19 @@ router.route(`${prefix}/:vintageId`)
   })
   .delete(async (req, res) => {
     const _id = new ObjectId(req.params.vintageId)
-    const children = await db.collection(childrenCollection).find({ vintageId: _id }).toArray()
-    const childrenIds = children.map((item) => item._id)
-    await childrenAuditedCollection.deleteMany({ _id: { $in: childrenIds } })
     const response = await auditedCollection.deleteOne({ _id })
     res.status(200).json({
       message: `Vintage deleted. Number of vintages deleted: ${response?.deletedCount}`
     })
   })
+
+const changeStream = db.collection(collection).watch(
+  [{ $match: { operationType: 'delete' } }]
+)
+changeStream.on('change', next => {
+  if (next.operationType !== 'delete') return;
+  spacesAuditedCollection.deleteMany({ vintageId: next.documentKey._id });
+})
 
 router.use(stagesRoutes)
 

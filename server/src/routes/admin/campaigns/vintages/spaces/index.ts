@@ -47,9 +47,6 @@ router.route(`${prefix}/:spaceId`)
   .patch(async (req, res) => {
     const _id = new ObjectId(req.params.spaceId)
     const { _id: _, ...space }: Space = req.body
-    // const errors: { name?: string, status?: string } = {}
-    // if (vintage.name.length < 2 || vintage.name.length > 255) errors.name = "The campaign name should have 2 to 255 characters"
-    // if (Object.keys(errors).length > 0) return res.status(304).json({ message: Object.values(errors).join(" // ") })
     const spaceId = new ObjectId(_id)
     const response = await auditedCollection.updateOne({ _id: spaceId }, { $set: { ...space } })
     res.status(200).json({

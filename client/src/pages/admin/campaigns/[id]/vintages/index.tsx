@@ -31,7 +31,7 @@ export default function Vintages({ vintages = [] }: { vintages: VintageLight[] }
         <ModalTitle>Créer un millesime</ModalTitle>
         <ModalContent>
           <VintageForm
-            onSubmit={() => {
+            afterSubmit={() => {
               queryClient.invalidateQueries({ queryKey: ["campaigns", campaignId] });
               setIsOpen(false);
             }}

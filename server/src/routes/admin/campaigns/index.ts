@@ -10,8 +10,8 @@ const router = Router()
 const collection = "campaigns"
 const prefix = `/admin/${collection}`
 const auditedCollection = audit(collection)
-const childrenCollection = "vintages"
-const childrenAuditedCollection = audit(childrenCollection)
+const vintagesCollection = "vintages"
+const vintagesAuditedCollection = audit(vintagesCollection)
 
 // /admin/campaigns
 router.route(prefix)
@@ -55,7 +55,7 @@ router.route(prefix)
     const errors: { name?: string, shortName?: string } = {}
     if (campaign.name.length < 2 || campaign.name.length > 255) errors.name = "The campaign name should have 2 to 255 characters"
     if (campaign?.shortName && (campaign.shortName.length < 2 || campaign.shortName.length > 64)) errors.shortName = "The campaign name should have 2 to 255 characters"
-    if (Object.keys(errors).length > 0) return res.status(304).json({ message: Object.values(errors).join(" // ") })
+    if (Object.keys(errors).length > 0) return res.status(304).json({ message: Object.values(errors).join("\n") })
     const response = await auditedCollection.insertOne(campaign)
     res.status(201).json({
       message: `Campaign ${campaign.name} added. id: ${response?.insertedId}`,
@@ -98,12 +98,13 @@ router.route(`${prefix}/:campaignId`)
     res.status(404).json({ message: `No campaign found with id ${_id}` })
   })
   .patch(async (req, res) => {
+    console.log('patch')
     const _id = new ObjectId(req.params.campaignId)
     const { _id: _, ...campaign }: Campaign = req.body
     const errors: { name?: string, shortName?: string } = {}
     if (campaign.name.length < 2 || campaign.name.length > 255) errors.name = "The campaign name should have 2 to 255 characters"
     if (campaign?.shortName && (campaign.shortName.length < 2 || campaign.shortName.length > 64)) errors.shortName = "The campaign name should have 2 to 255 characters"
-    if (Object.keys(errors).length > 0) return res.status(304).json({ message: Object.values(errors).join(" // ") })
+    if (Object.keys(errors).length > 0) return res.status(304).json({ message: Object.values(errors).join("\n") })
     const campaignId = new ObjectId(_id)
     const response = await auditedCollection.updateOne({ _id: campaignId }, { $set: { ...campaign } })
     res.status(200).json({
@@ -112,14 +113,19 @@ router.route(`${prefix}/:campaignId`)
   })
   .delete(async (req, res) => {
     const _id = new ObjectId(req.params.campaignId)
-    const children = await db.collection(childrenCollection).find({ campaignId: _id }).toArray()
-    const childrenIds = children.map((item) => item._id)
-    await childrenAuditedCollection.deleteMany({ _id: { $in: childrenIds } })
     const response = await auditedCollection.deleteOne({ _id })
     res.status(200).json({
       message: `Campaign deleted. Number of campaigns deleted: ${response?.deletedCount}`
     })
   })
+
+const changeStream = db.collection(collection).watch(
+  [{ $match: { operationType: 'delete' } }]
+)
+changeStream.on('change', next => {
+  if (next.operationType !== 'delete') return;
+  vintagesAuditedCollection.deleteMany({ campaignId: next.documentKey._id });
+})
 
 router.use(vintagesRoutes)
 

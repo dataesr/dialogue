@@ -43,7 +43,7 @@ export default function Campaigns() {
         <ModalTitle>Créer une campagne</ModalTitle>
         <ModalContent>
           <CampaignForm
-            onSubmit={() => {
+            afterSubmit={() => {
               queryClient.invalidateQueries({ queryKey: ["campaigns"] });
               setIsOpen(false);
             }}

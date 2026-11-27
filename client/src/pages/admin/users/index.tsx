@@ -2,19 +2,18 @@ import { Button, ButtonGroup, Modal, ModalContent, ModalTitle, TextInput, Title 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
 
-import type { UserType, UserNewType } from "../../../../../server/src/types/user"
-
+import type { User, UserNew } from "../../../../../server/src/types/user"
 
 export default function Users() {
   const [isOpen, setIsOpen] = useState<boolean>(false)
-  const [userForm, setUserForm] = useState<UserNewType>({ firstName: "", lastName: "", email: "" })
+  const [userForm, setUserForm] = useState<UserNew>({ firstName: "", lastName: "", email: "" })
   const queryClient = useQueryClient()
 
   const {
     data: users,
     isError,
     isLoading,
-  } = useQuery<UserType[]>({
+  } = useQuery<User[]>({
     queryKey: ["users"],
     queryFn: async () => {
       const response = await fetch("/api/admin/users")
@@ -25,8 +24,9 @@ export default function Users() {
     },
   })
 
+  // TODO useQuery instead of useMutation
   const addUser = useMutation({
-    mutationFn: async (user: UserNewType) => {
+    mutationFn: async (user: UserNew) => {
       const response = await fetch("/api/admin/users", {
         body: JSON.stringify(user),
         headers: { "Content-Type": "application/json" },
@@ -100,7 +100,7 @@ export default function Users() {
           {!isLoading &&
             users &&
             users.length > 0 &&
-            users.map((user: UserType) => (
+            users.map((user: User) => (
               <tr key={user._id.toString()}>
                 <td>{user?.firstName}</td>
                 <td>{user?.lastName}</td>

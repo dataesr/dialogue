@@ -15,7 +15,7 @@ type CampaignForm = Omit<CampaignNew, "validation"> & {
 }
 
 const CAMPAIGN_VALIDATIONS = [
-  { key: "", value: "-", },
+  { key: "", value: "", },
   { key: "none", label: "Sans validation" },
   { key: "declarative", label: "Validation déclarative" },
   { key: "locking", label: "Validation bloquante" },
@@ -23,7 +23,7 @@ const CAMPAIGN_VALIDATIONS = [
 
 const defaultCampaign: CampaignForm = { name: "", shortName: "", tagline: "", validation: "" }
 
-export default function CampaignForm({ c, onSubmit = () => { } }: { c?: Campaign, onSubmit?: () => void }) {
+export default function CampaignForm({ afterSubmit = () => { }, c }: { afterSubmit?: () => void, c?: Campaign }) {
   const [campaign, setCampaign] = useState<CampaignForm>(c ?? defaultCampaign)
   const [errors, setErrors] = useState<{ [key: string]: unknown }>({})
   const [showErrors, setShowErrors] = useState<boolean>(false)
@@ -57,10 +57,11 @@ export default function CampaignForm({ c, onSubmit = () => { } }: { c?: Campaign
       method: c ? "PATCH" : "POST",
     })
     resetForm()
-    onSubmit()
+    afterSubmit()
   }
 
-  const handleDelete = async () => {
+  const handleDelete = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault()
     if (!c) return
     await fetch(`/api/admin/campaigns/${c._id}`, {
       headers: {
@@ -68,8 +69,8 @@ export default function CampaignForm({ c, onSubmit = () => { } }: { c?: Campaign
       },
       method: "DELETE",
     })
-    navigate(-1)
-    onSubmit()
+    navigate("/")
+    afterSubmit()
   }
 
   return (
@@ -112,7 +113,7 @@ export default function CampaignForm({ c, onSubmit = () => { } }: { c?: Campaign
         {CAMPAIGN_VALIDATIONS.map(({ key, label }) => <SelectOption key={key}>{label}</SelectOption>)}
       </Select>
       <ButtonGroup isInlineFrom="xs" align="right">
-        {c && <Button onClick={() => handleDelete()} color="error">Supprimer</Button>}
+        {c && <Button onClick={handleDelete} color="error">Supprimer</Button>}
         <Button type="submit">Valider</Button>
       </ButtonGroup>
     </form>

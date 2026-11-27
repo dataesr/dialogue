@@ -65,7 +65,7 @@ export default function SpaceForm({ onSubmit = () => { }, s }: { onSubmit?: () =
       },
       method: "DELETE",
     })
-    navigate(-1)
+    navigate(`/campaigns/${campaignId}/vintages/${vintageId}`)
     onSubmit()
   }
 

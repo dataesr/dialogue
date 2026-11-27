@@ -33,7 +33,7 @@ type VintageForm = Omit<VintageNew, 'campaignId' | 'closesAt' | 'opensAt'> & {
   opensAt: string
 }
 
-export default function VintageForm({ onSubmit = () => { }, v }: { onSubmit?: () => void, v?: Vintage }) {
+export default function VintageForm({ afterSubmit = () => { }, v }: { afterSubmit?: () => void, v?: Vintage }) {
   const navigate = useNavigate()
   const { campaignId } = useParams()
   const defaultVintage: VintageForm = { campaignId: campaignId ?? "", closesAt: new Date().toISOString().slice(0, 16), name: "", opensAt: new Date().toISOString().slice(0, 16), status: "draft" }
@@ -66,10 +66,11 @@ export default function VintageForm({ onSubmit = () => { }, v }: { onSubmit?: ()
       method: v ? "PATCH" : "POST",
     })
     resetForm()
-    onSubmit()
+    afterSubmit()
   }
 
-  const handleDelete = async () => {
+  const handleDelete = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault()
     if (!v) return
     await fetch(`/api/admin/campaigns/${campaignId}/vintages/${v._id}`, {
       headers: {
@@ -77,8 +78,8 @@ export default function VintageForm({ onSubmit = () => { }, v }: { onSubmit?: ()
       },
       method: "DELETE",
     })
-    navigate(-1)
-    onSubmit()
+    navigate(`/campaigns/${campaignId}`)
+    afterSubmit()
   }
 
   return (
@@ -117,7 +118,7 @@ export default function VintageForm({ onSubmit = () => { }, v }: { onSubmit?: ()
         {VINTAGE_STATUS.map(({ key, label }) => <SelectOption key={key}>{label}</SelectOption>)}
       </Select>
       <ButtonGroup isInlineFrom="xs" align="right">
-        {v && <Button onClick={() => handleDelete()} color="error">Supprimer</Button>}
+        {v && <Button onClick={handleDelete} color="error">Supprimer</Button>}
         <Button type="submit">Valider</Button>
       </ButtonGroup>
     </form>

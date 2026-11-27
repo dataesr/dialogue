@@ -47,8 +47,8 @@ export default function VintageForm({ afterSubmit = () => { }, v }: { afterSubmi
     setShowErrors(false)
   }
 
-  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
-    e.preventDefault()
+  const handleSubmit = async (event: React.SubmitEvent<HTMLFormElement>) => {
+    event.preventDefault()
     const errorsTmp: { name?: string } = {}
     if (!vintage?.name) errorsTmp.name = "Un nom est requis !"
     if (vintage.name && vintage.name.length < 2) errorsTmp.name = "Le nom doit avoir 2 caractères ou plus"
@@ -69,8 +69,8 @@ export default function VintageForm({ afterSubmit = () => { }, v }: { afterSubmi
     afterSubmit()
   }
 
-  const handleDelete = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    e.preventDefault()
+  const handleDelete = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    event.preventDefault()
     if (!v) return
     await fetch(`/api/admin/campaigns/${campaignId}/vintages/${v._id}`, {
       headers: {
@@ -89,19 +89,19 @@ export default function VintageForm({ afterSubmit = () => { }, v }: { afterSubmi
         label="Nom"
         message={(showErrors && errors?.name) ? <>{errors.name}</> : null}
         messageType={(showErrors && errors?.name) ? "error" : null}
-        onChange={(e) => { e.preventDefault(); setVintage({ ...vintage, name: e.target.value }) }}
+        onChange={(event) => { event.preventDefault(); setVintage({ ...vintage, name: event.target.value }) }}
         required
         value={vintage.name}
       />
       <TextInput
         label="Ouverture"
-        onChange={(e) => { e.preventDefault(); setVintage({ ...vintage, opensAt: e.target.value }) }}
+        onChange={(event) => { event.preventDefault(); setVintage({ ...vintage, opensAt: event.target.value }) }}
         type="datetime-local"
         value={(vintage?.opensAt ?? new Date())?.toString() ?? ""}
       />
       <TextInput
         label="Fermeture"
-        onChange={(e) => { e.preventDefault(); setVintage({ ...vintage, closesAt: e.target.value }) }}
+        onChange={(event) => { event.preventDefault(); setVintage({ ...vintage, closesAt: event.target.value }) }}
         type="datetime-local"
         value={(vintage?.closesAt ?? new Date())?.toString() ?? ""}
       />
@@ -112,7 +112,7 @@ export default function VintageForm({ afterSubmit = () => { }, v }: { afterSubmi
         label="Statut"
         message={(showErrors && errors?.status) ? <>{errors.status}</> : null}
         messageType={(showErrors && errors?.status) ? "error" : null}
-        onChange={(e) => setVintage({ ...vintage, status: e as VintageStatus })}
+        onChange={(event) => setVintage({ ...vintage, status: event as VintageStatus })}
         value={vintage.status}
       >
         {VINTAGE_STATUS.map(({ key, label }) => <SelectOption key={key}>{label}</SelectOption>)}

@@ -53,8 +53,8 @@ export default function Campaigns() {
       <Title className="fr-my-3w">Campagnes</Title>
       <Button
         className="fr-mb-2w"
-        onClick={(e) => {
-          e.preventDefault();
+        onClick={(event) => {
+          event.preventDefault();
           setIsOpen(true);
         }}
       >

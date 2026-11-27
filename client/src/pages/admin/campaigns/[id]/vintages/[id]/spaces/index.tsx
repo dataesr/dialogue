@@ -1,5 +1,6 @@
 import {
   Button,
+  ButtonGroup,
   Modal,
   ModalContent,
   ModalTitle,
@@ -9,7 +10,7 @@ import { useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
 import { useParams } from "react-router-dom"
 
-import type { SpaceLight } from "../../../../../../../../../server/src/types/space"
+import type { Space, SpaceLight } from "../../../../../../../../../server/src/types/space"
 import SpaceForm from "./form"
 
 const SPACE_TYPE = [
@@ -21,10 +22,13 @@ const SPACE_TYPE = [
 
 export default function Spaces({ spaces = [] }: { spaces: SpaceLight[] }) {
   const [isOpen, setIsOpen] = useState<boolean>(false)
+  const [selectedSpace, setSelectedSpace] = useState<Space | undefined>()
   const queryClient = useQueryClient()
   const { campaignId, vintageId } = useParams()
 
-  const handleDelete = async (spaceId: string) => {
+
+  const handleDelete = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, spaceId: string) => {
+    event.preventDefault()
     await fetch(`/api/admin/campaigns/${campaignId}/vintages/${vintageId}/spaces/${spaceId}`, {
       headers: {
         "Content-Type": "application/json",
@@ -37,22 +41,24 @@ export default function Spaces({ spaces = [] }: { spaces: SpaceLight[] }) {
   return (
     <>
       <Modal isOpen={isOpen} hide={() => setIsOpen(false)}>
-        <ModalTitle>Créer un espace</ModalTitle>
+        <ModalTitle>{selectedSpace ? "Modifier" : "Créer"} un espace</ModalTitle>
         <ModalContent>
           <SpaceForm
-            onSubmit={() => {
+            afterSubmit={() => {
               queryClient.invalidateQueries({ queryKey: ["campaigns", campaignId, "vintages", vintageId] });
               setIsOpen(false);
             }}
+            s={selectedSpace}
           />
         </ModalContent>
       </Modal>
       <Title as="h4">Espaces</Title>
       <Button
         className="fr-mb-2w"
-        onClick={(e) => {
-          e.preventDefault();
-          setIsOpen(true);
+        onClick={(event) => {
+          event.preventDefault()
+          setSelectedSpace()
+          setIsOpen(true)
         }}
       >
         Nouvel espace
@@ -77,16 +83,21 @@ export default function Spaces({ spaces = [] }: { spaces: SpaceLight[] }) {
                       <td>{SPACE_TYPE.find((item) => item.key === space.type)?.label ?? "Type inconnu"}</td>
                       <td>{space.closedAt?.toString()}</td>
                       <td>
-                        <Button
-                          color="error"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            handleDelete(space._id.toString());
-                          }}
-                          variant="secondary"
-                        >
-                          Supprimer
-                        </Button>
+                        <ButtonGroup isInlineFrom="xs" align="right">
+                          <Button
+                            onClick={(event) => { event.preventDefault(); setSelectedSpace(space); setIsOpen(true)}}
+                            variant="secondary"
+                          >
+                            Repousser
+                          </Button>
+                          <Button
+                            color="error"
+                            onClick={(event) => handleDelete(event, space._id.toString())}
+                            variant="secondary"
+                          >
+                            Supprimer
+                          </Button>
+                        </ButtonGroup>
                       </td>
                     </tr>
                   ))}

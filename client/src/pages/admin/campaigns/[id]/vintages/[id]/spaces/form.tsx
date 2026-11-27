@@ -6,7 +6,6 @@ import {
   TextInput,
 } from "@dataesr/dsfr-plus"
 import { useState } from "react"
-import { useNavigate } from "react-router"
 import { useParams } from "react-router-dom"
 
 import type { Space, SpaceNew, SpaceType } from "../../../../../../../../../server/src/types/space"
@@ -23,13 +22,12 @@ type SpaceForm = Omit<SpaceNew, 'closedAt' | 'vintageId'> & {
   vintageId: string
 }
 
-export default function SpaceForm({ onSubmit = () => { }, s }: { onSubmit?: () => void, s?: Space }) {
-  const navigate = useNavigate()
+export default function SpaceForm({ afterSubmit = () => { }, s }: { afterSubmit?: () => void, s?: Space }) {
   const { campaignId, vintageId } = useParams()
   const defaultSpace: SpaceForm = { closedAt: new Date().toISOString().slice(0, 16), structureId: "", type: "reponse", vintageId: vintageId ?? "" }
   const [errors, setErrors] = useState<{ [key: string]: unknown }>({})
   const [showErrors, setShowErrors] = useState<boolean>(false)
-  const [space, setSpace] = useState<SpaceForm>(s ?? defaultSpace)
+  const [space, setSpace] = useState<SpaceForm>(s ? s : defaultSpace)
 
   const resetForm = () => {
     if (!s) setSpace(defaultSpace)
@@ -37,8 +35,8 @@ export default function SpaceForm({ onSubmit = () => { }, s }: { onSubmit?: () =
     setShowErrors(false)
   }
 
-  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
-    e.preventDefault()
+  const handleSubmit = async (event: React.SubmitEvent<HTMLFormElement>) => {
+    event.preventDefault()
     const errorsTmp: { structureId?: string } = {}
     if (!space?.structureId) errorsTmp.structureId = "Une structure est requise !"
     if (Object.keys(errorsTmp).length > 0) {
@@ -54,31 +52,18 @@ export default function SpaceForm({ onSubmit = () => { }, s }: { onSubmit?: () =
       method: s ? "PATCH" : "POST",
     })
     resetForm()
-    onSubmit()
-  }
-
-  const handleDelete = async () => {
-    if (!s) return
-    await fetch(`/api/admin/campaigns/${campaignId}/vintages/${vintageId}/spaces/${s._id}`, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-      method: "DELETE",
-    })
-    navigate(`/campaigns/${campaignId}/vintages/${vintageId}`)
-    onSubmit()
+    afterSubmit()
   }
 
   return (
     <form onSubmit={handleSubmit}>
       <Select
         aria-label="Type"
-        disabledKeys={[""]}
         isRequired
         label="Type"
         message={(showErrors && errors?.type) ? <>{errors.type}</> : null}
         messageType={(showErrors && errors?.type) ? "error" : null}
-        onChange={(e) => setSpace({ ...space, type: e as SpaceType })}
+        onChange={(event) => setSpace({ ...space, type: event as SpaceType })}
         value={space.type}
       >
         {SPACE_TYPE.map(({ key, label }) => <SelectOption key={key}>{label}</SelectOption>)}
@@ -88,18 +73,17 @@ export default function SpaceForm({ onSubmit = () => { }, s }: { onSubmit?: () =
         label="Structure ID"
         message={(showErrors && errors?.structureId) ? <>{errors.structureId}</> : null}
         messageType={(showErrors && errors?.structureId) ? "error" : null}
-        onChange={(e) => { e.preventDefault(); setSpace({ ...space, structureId: e.target.value }) }}
+        onChange={(event) => { event.preventDefault(); setSpace({ ...space, structureId: event.target.value }) }}
         required
         value={space.structureId}
       />
       <TextInput
         label="Fermeture"
-        onChange={(e) => { e.preventDefault(); setSpace({ ...space, closedAt: e.target.value }) }}
+        onChange={(event) => { event.preventDefault(); setSpace({ ...space, closedAt: event.target.value }) }}
         type="datetime-local"
         value={(space?.closedAt ?? new Date())?.toString() ?? ""}
       />
       <ButtonGroup isInlineFrom="xs" align="right">
-        {s && <Button onClick={() => handleDelete()} color="error">Supprimer</Button>}
         <Button type="submit">Valider</Button>
       </ButtonGroup>
     </form>

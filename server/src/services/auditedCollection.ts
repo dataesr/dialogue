@@ -44,8 +44,8 @@ export function auditedCollection(name: string) {
         result = await fn(session)
       })
       return result
-    } catch (e) {
-      await auditError.insertOne({ error: e })
+    } catch (error) {
+      await auditError.insertOne({ error })
     } finally {
       await session.endSession()
     }

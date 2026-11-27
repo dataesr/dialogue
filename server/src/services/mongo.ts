@@ -7,8 +7,8 @@ const mongoUri = process.env.MONGO_URI || "mongodb://localhost:27017/"
 const client = new MongoClient(mongoUri)
 
 logger.info(`Try to connect to mongo Dialogue...`)
-await client.connect().catch((e) => {
-  logger.info(`Connexion to mongo Dialogue instance failed... Terminating... ${e.message}`)
+await client.connect().catch((error) => {
+  logger.info(`Connexion to mongo Dialogue instance failed... Terminating... ${error.message}`)
   process.kill(process.pid, "SIGTERM")
 })
 

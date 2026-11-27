@@ -44,8 +44,8 @@ export default function Users() {
     },
   })
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+  const handleSubmit = (event: React.SubmitEvent<HTMLFormElement>) => {
+    event.preventDefault()
     addUser.mutate(userForm)
   }
 
@@ -55,9 +55,9 @@ export default function Users() {
         <ModalTitle>Ajout d'un utilisateur</ModalTitle>
         <ModalContent>
           <form onSubmit={handleSubmit}>
-            <TextInput label="Prénom" value={userForm.firstName} onChange={(e) => setUserForm({ ...userForm, firstName: e.target.value })} required />
-            <TextInput label="Nom" value={userForm.lastName} onChange={(e) => setUserForm({ ...userForm, lastName: e.target.value })} required />
-            <TextInput label="Email" value={userForm.email} onChange={(e) => setUserForm({ ...userForm, email: e.target.value })} type="email" required />
+            <TextInput label="Prénom" value={userForm.firstName} onChange={(event) => setUserForm({ ...userForm, firstName: event.target.value })} required />
+            <TextInput label="Nom" value={userForm.lastName} onChange={(event) => setUserForm({ ...userForm, lastName: event.target.value })} required />
+            <TextInput label="Email" value={userForm.email} onChange={(event) => setUserForm({ ...userForm, email: event.target.value })} type="email" required />
             {addUser.isError && <p role="alert">{addUser.error.message}</p>}
             <ButtonGroup isInlineFrom="xs" align="right">
               <Button type="submit" disabled={addUser.isPending}>
@@ -70,8 +70,8 @@ export default function Users() {
       <Title className="fr-my-3w">Utilisateurs</Title>
       <Button
         className="fr-mb-2w"
-        onClick={(e) => {
-          e.preventDefault()
+        onClick={(event) => {
+          event.preventDefault()
           setIsOpen(true)
         }}
       >

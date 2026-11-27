@@ -35,8 +35,8 @@ export default function CampaignForm({ afterSubmit = () => { }, c }: { afterSubm
     setShowErrors(false)
   }
 
-  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
-    e.preventDefault()
+  const handleSubmit = async (event: React.SubmitEvent<HTMLFormElement>) => {
+    event.preventDefault()
     const errorsTmp: { name?: string, shortName?: string, validation?: string } = {}
     if (!campaign?.name) errorsTmp.name = "Un nom est requis !"
     if (campaign.name && campaign.name.length < 2) errorsTmp.name = "Le nom doit avoir 2 caractères ou plus"
@@ -60,8 +60,8 @@ export default function CampaignForm({ afterSubmit = () => { }, c }: { afterSubm
     afterSubmit()
   }
 
-  const handleDelete = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    e.preventDefault()
+  const handleDelete = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    event.preventDefault()
     if (!c) return
     await fetch(`/api/admin/campaigns/${c._id}`, {
       headers: {
@@ -80,7 +80,7 @@ export default function CampaignForm({ afterSubmit = () => { }, c }: { afterSubm
         label="Nom"
         message={(showErrors && errors?.name) ? <>{errors.name}</> : null}
         messageType={(showErrors && errors?.name) ? "error" : null}
-        onChange={(e) => { e.preventDefault(); setCampaign({ ...campaign, name: e.target.value }) }}
+        onChange={(event) => { event.preventDefault(); setCampaign({ ...campaign, name: event.target.value }) }}
         required
         value={campaign.name}
       />
@@ -89,7 +89,7 @@ export default function CampaignForm({ afterSubmit = () => { }, c }: { afterSubm
         label="Nom court"
         message={(showErrors && errors?.shortName) ? <>{errors.shortName}</> : null}
         messageType={(showErrors && errors?.shortName) ? "error" : null}
-        onChange={(e) => { e.preventDefault(); setCampaign({ ...campaign, shortName: e.target.value }) }}
+        onChange={(event) => { event.preventDefault(); setCampaign({ ...campaign, shortName: event.target.value }) }}
         value={campaign.shortName}
       />
       <TextInput
@@ -97,17 +97,16 @@ export default function CampaignForm({ afterSubmit = () => { }, c }: { afterSubm
         label="Accroche"
         message={(showErrors && errors?.tagline) ? <>{errors.tagline}</> : null}
         messageType={(showErrors && errors?.tagline) ? "error" : null}
-        onChange={(e) => { e.preventDefault(); setCampaign({ ...campaign, tagline: e.target.value }) }}
+        onChange={(event) => { event.preventDefault(); setCampaign({ ...campaign, tagline: event.target.value }) }}
         value={campaign.tagline}
       />
       <Select
         aria-label="Mode de validation"
-        disabledKeys={[""]}
         isRequired
         label="Mode de validation"
         message={(showErrors && errors?.validation) ? <>{errors.validation}</> : null}
         messageType={(showErrors && errors?.validation) ? "error" : null}
-        onChange={(e) => setCampaign({ ...campaign, validation: e as CampaignValidation })}
+        onChange={(event) => setCampaign({ ...campaign, validation: event as CampaignValidation })}
         value={campaign.validation}
       >
         {CAMPAIGN_VALIDATIONS.map(({ key, label }) => <SelectOption key={key}>{label}</SelectOption>)}

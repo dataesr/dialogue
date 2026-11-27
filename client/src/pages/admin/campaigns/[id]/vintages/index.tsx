@@ -41,8 +41,8 @@ export default function Vintages({ vintages = [] }: { vintages: VintageLight[] }
       <Title as="h4">Millésimes</Title>
       <Button
         className="fr-mb-2w"
-        onClick={(e) => {
-          e.preventDefault();
+        onClick={(event) => {
+          event.preventDefault();
           setIsOpen(true);
         }}
       >

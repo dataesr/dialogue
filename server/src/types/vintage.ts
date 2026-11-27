@@ -9,6 +9,7 @@ export interface Vintage {
   _id: ObjectId
   affiliationType?: AffiliationType
   campaignId: ObjectId
+  campaignName: string
   closesAt?: Date
   description?: string
   modifiedAt: Date
@@ -24,4 +25,4 @@ export interface Vintage {
 
 export type VintageNew = Omit<Vintage, '_id' | 'numberOfSpaces' | 'modifiedBy' | 'modifiedAt' | 'spaces'>
 
-export type VintageLight = Omit<Vintage, 'campaignId' | 'spaces'>
+export type VintageLight = Omit<Vintage, 'campaignId' | 'campaignName' | 'spaces'>

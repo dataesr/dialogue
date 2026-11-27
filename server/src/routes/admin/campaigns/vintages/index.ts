@@ -78,15 +78,49 @@ router.route(`${prefix}/:vintageId`)
       { $limit: 1 },
       {
         $lookup: {
+          from: "campaigns",
+          localField: "campaignId",
+          foreignField: "_id",
+          as: "campaigns",
+        }
+      },
+      {
+        $lookup: {
           from: "spaces",
           localField: "_id",
           foreignField: "vintageId",
           as: "spaces",
         },
       },
+      {
+        $project: {
+          _id: 1,
+          campaign: { $first: "$campaigns" },
+          closesAt: 1,
+          modifiedAt: 1,
+          modifiedBy: 1,
+          name: 1,
+          opensAt: 1,
+          spaces: 1,
+          status: 1,
+        }
+      },
+      {
+        $project: {
+          _id: 1,
+          campaignName: "$campaign.name",
+          closesAt: 1,
+          modifiedAt: 1,
+          modifiedBy: 1,
+          name: 1,
+          opensAt: 1,
+          spaces: 1,
+          status: 1,
+        }
+      }
     ]).toArray()
-    if (response.length === 1) return res.status(200).json(response[0])
-    res.status(404).json({ message: `No vintage found with id ${_id}` })
+    if (response.length === 0) return res.status(404).json({ message: `No vintage found with id ${_id}` })
+    res.status(200).json(response[0])
   })
   .patch(async (req, res) => {
     const _id = new ObjectId(req.params.vintageId)

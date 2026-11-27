@@ -98,7 +98,6 @@ router.route(`${prefix}/:campaignId`)
     res.status(404).json({ message: `No campaign found with id ${_id}` })
   })
   .patch(async (req, res) => {
-    console.log('patch')
     const _id = new ObjectId(req.params.campaignId)
     const { _id: _, ...campaign }: Campaign = req.body
     const errors: { name?: string, shortName?: string } = {}

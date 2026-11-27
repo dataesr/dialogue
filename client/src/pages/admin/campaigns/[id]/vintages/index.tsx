@@ -30,35 +30,56 @@ export default function Vintages({ vintages = [] }: { vintages: VintageLight[] }
       <Modal isOpen={isOpen} hide={() => setIsOpen(false)}>
         <ModalTitle>Créer un millesime</ModalTitle>
         <ModalContent>
-          <VintageForm onSubmit={() => { queryClient.invalidateQueries({ queryKey: ["campaigns", campaignId] }); setIsOpen(false) }} />
+          <VintageForm
+            onSubmit={() => {
+              queryClient.invalidateQueries({ queryKey: ["campaigns", campaignId] });
+              setIsOpen(false);
+            }}
+          />
         </ModalContent>
       </Modal>
       <Title as="h4">Millésimes</Title>
-      <Button className="fr-mb-2w" onClick={(e) => { e.preventDefault(); setIsOpen(true) }}>
+      <Button
+        className="fr-mb-2w"
+        onClick={(e) => {
+          e.preventDefault();
+          setIsOpen(true);
+        }}
+      >
         Nouveau millésime
       </Button>
-      <table className="fr-table">
-        <thead>
-          <tr>
-            <th>Nom</th>
-            <th>Statut</th>
-            <th>Ouverture</th>
-            <th>Fermeture</th>
-            <th>Espaces</th>
-          </tr>
-        </thead>
-        <tbody>
-          {(vintages ?? []).map((vintage: VintageLight) => (
-            <tr key={vintage._id.toString()}>
-              <td><a href={`./${campaignId}/millesimes/${vintage._id}`}>{vintage.name}</a></td>
-              <td>{VINTAGE_STATUS.find((item) => item.key === vintage.status)?.label ?? "Statut inconnu"}</td>
-              <td>{vintage?.opensAt?.toString()}</td>
-              <td>{vintage?.closesAt?.toString()}</td>
-              <td>{vintage?.numberOfSpaces ?? 0}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <div className="fr-table" id="table-0-component">
+        <div className="fr-table__wrapper">
+          <div className="fr-table__container">
+            <div className="fr-table__content">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Nom</th>
+                    <th>Statut</th>
+                    <th>Ouverture</th>
+                    <th>Fermeture</th>
+                    <th>Espaces</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {(vintages ?? []).map((vintage: VintageLight) => (
+                    <tr key={vintage._id.toString()}>
+                      <td>
+                        <a href={`./${campaignId}/millesimes/${vintage._id}`}>{vintage.name}</a>
+                      </td>
+                      <td>{VINTAGE_STATUS.find((item) => item.key === vintage.status)?.label ?? "Statut inconnu"}</td>
+                      <td>{vintage?.opensAt?.toString()}</td>
+                      <td>{vintage?.closesAt?.toString()}</td>
+                      <td>{vintage?.numberOfSpaces ?? 0}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
     </>
-  )
+  );
 }

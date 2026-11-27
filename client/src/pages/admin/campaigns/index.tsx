@@ -42,39 +42,60 @@ export default function Campaigns() {
       <Modal isOpen={isOpen} hide={() => setIsOpen(false)}>
         <ModalTitle>Créer une campagne</ModalTitle>
         <ModalContent>
-          <CampaignForm onSubmit={() => { queryClient.invalidateQueries({ queryKey: ["campaigns"] }); setIsOpen(false) }} />
+          <CampaignForm
+            onSubmit={() => {
+              queryClient.invalidateQueries({ queryKey: ["campaigns"] });
+              setIsOpen(false);
+            }}
+          />
         </ModalContent>
       </Modal>
       <Title className="fr-my-3w">Campagnes</Title>
-      <Button className="fr-mb-2w" onClick={(e) => { e.preventDefault(); setIsOpen(true) }}>
+      <Button
+        className="fr-mb-2w"
+        onClick={(e) => {
+          e.preventDefault();
+          setIsOpen(true);
+        }}
+      >
         Nouvelle campagne
       </Button>
       {isError && <Alert description="Erreur au chargement des campagnes" variant="error" />}
       {!isError && isLoading && <Text>Chargement des campagnes...</Text>}
       {!isError && !isLoading && (
-        <table className="fr-table">
-          <thead>
-            <tr>
-              <th>Nom</th>
-              <th>Nom court</th>
-              <th>Accroche</th>
-              <th>Mode de validation</th>
-              <th>Millésimes</th>
-            </tr>
-          </thead>
-          <tbody>
-            {(campaigns ?? []).map((campaign: CampaignLight) => (
-              <tr key={campaign._id.toString()}>
-                <td><a href={`./campagnes/${campaign._id}`}>{campaign.name}</a></td>
-                <td>{campaign?.shortName}</td>
-                <td>{campaign?.tagline}</td>
-                <td>{CAMPAIGN_VALIDATIONS.find((item) => item.key === campaign.validation)?.label ?? "Mode de validation inconnu"}</td>
-                <td>{campaign?.numberOfVintages}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="fr-table" id="table-0-component">
+          <div className="fr-table__wrapper">
+            <div className="fr-table__container">
+              <div className="fr-table__content">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Nom</th>
+                      <th>Nom court</th>
+                      <th>Accroche</th>
+                      <th>Mode de validation</th>
+                      <th>Millésimes</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {(campaigns ?? []).map((campaign: CampaignLight) => (
+                      <tr key={campaign._id.toString()}>
+                        <td>
+                          <a href={`./campagnes/${campaign._id}`}>{campaign.name}</a>
+                        </td>
+                        <td>{campaign?.shortName}</td>
+                        <td>{campaign?.tagline}</td>
+                        <td>{CAMPAIGN_VALIDATIONS.find((item) => item.key === campaign.validation)?.label ?? "Mode de validation inconnu"}</td>
+                        <td>{campaign?.numberOfVintages}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
     </>
-  )
+  );
 }

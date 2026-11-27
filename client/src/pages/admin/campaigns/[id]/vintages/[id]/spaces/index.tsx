@@ -39,33 +39,63 @@ export default function Spaces({ spaces = [] }: { spaces: SpaceLight[] }) {
       <Modal isOpen={isOpen} hide={() => setIsOpen(false)}>
         <ModalTitle>Créer un espace</ModalTitle>
         <ModalContent>
-          <SpaceForm onSubmit={() => { queryClient.invalidateQueries({ queryKey: ["campaigns", campaignId, "vintages", vintageId] }); setIsOpen(false) }} />
+          <SpaceForm
+            onSubmit={() => {
+              queryClient.invalidateQueries({ queryKey: ["campaigns", campaignId, "vintages", vintageId] });
+              setIsOpen(false);
+            }}
+          />
         </ModalContent>
       </Modal>
       <Title as="h4">Espaces</Title>
-      <Button className="fr-mb-2w" onClick={(e) => { e.preventDefault(); setIsOpen(true) }}>
+      <Button
+        className="fr-mb-2w"
+        onClick={(e) => {
+          e.preventDefault();
+          setIsOpen(true);
+        }}
+      >
         Nouvel espace
       </Button>
-      <table className="fr-table">
-        <thead>
-          <tr>
-            <th>Etablissement</th>
-            <th>Type</th>
-            <th>Fermeture</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {(spaces ?? []).map((space: SpaceLight) => (
-            <tr key={space._id.toString()}>
-              <td>{space.structureId.toString()}</td>
-              <td>{SPACE_TYPE.find((item) => item.key === space.type)?.label ?? "Type inconnu"}</td>
-              <td>{space.closedAt?.toString()}</td>
-              <td><Button color="error" onClick={(e) => { e.preventDefault(); handleDelete(space._id.toString()) }} variant="secondary">Supprimer</Button></td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <div className="fr-table" id="table-0-component">
+        <div className="fr-table__wrapper">
+          <div className="fr-table__container">
+            <div className="fr-table__content">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Etablissement</th>
+                    <th>Type</th>
+                    <th>Fermeture</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {(spaces ?? []).map((space: SpaceLight) => (
+                    <tr key={space._id.toString()}>
+                      <td>{space.structureId.toString()}</td>
+                      <td>{SPACE_TYPE.find((item) => item.key === space.type)?.label ?? "Type inconnu"}</td>
+                      <td>{space.closedAt?.toString()}</td>
+                      <td>
+                        <Button
+                          color="error"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handleDelete(space._id.toString());
+                          }}
+                          variant="secondary"
+                        >
+                          Supprimer
+                        </Button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
     </>
-  )
+  );
 }

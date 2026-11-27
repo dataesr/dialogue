@@ -13,8 +13,12 @@ const perPage = 1000
 router
   .route(prefix)
   .get(async (_req, res) => {
-    const response = await db.collection(collection).find().toArray()
-    res.json(response)
+    const response = await db.collection(collection).find({}, { limit: 100 }).toArray()
+    const response2 = response.map((structure) => ({
+      ...structure,
+      searchableText: `${structure.name} ${structure.shortName}`.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase(),
+    }))
+    res.json(response2)
   })
   // It tooks 30"
   .post(async (_req, res) => {

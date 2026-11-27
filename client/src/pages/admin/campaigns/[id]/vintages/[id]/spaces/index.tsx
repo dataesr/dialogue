@@ -1,6 +1,7 @@
 import {
   Button,
   ButtonGroup,
+  Link,
   Modal,
   ModalContent,
   ModalTitle,
@@ -12,6 +13,8 @@ import { useParams } from "react-router-dom"
 
 import type { Space, SpaceLight } from "../../../../../../../../../server/src/types/space"
 import SpaceForm from "./form"
+
+const { VITE_PAYSAGE_URL } = import.meta.env
 
 const SPACE_TYPE = [
   { key: "reponse", label: "Répondant" },
@@ -40,7 +43,7 @@ export default function Spaces({ spaces = [] }: { spaces: SpaceLight[] }) {
 
   return (
     <>
-      <Modal isOpen={isOpen} hide={() => setIsOpen(false)}>
+      <Modal isOpen={isOpen} hide={() => setIsOpen(false)} size="lg">
         <ModalTitle>{selectedSpace ? "Modifier" : "Créer"} un espace</ModalTitle>
         <ModalContent>
           <SpaceForm
@@ -79,7 +82,7 @@ export default function Spaces({ spaces = [] }: { spaces: SpaceLight[] }) {
                 <tbody>
                   {(spaces ?? []).map((space: SpaceLight) => (
                     <tr key={space._id.toString()}>
-                      <td>{space.structureId.toString()}</td>
+                      <td><Link href={`${VITE_PAYSAGE_URL}/structures/${space.structureId}/presentation`} target="_blank">{space.structureId.toString()}</Link></td>
                       <td>{SPACE_TYPE.find((item) => item.key === space.type)?.label ?? "Type inconnu"}</td>
                       <td>{space.closedAt?.toString()}</td>
                       <td>

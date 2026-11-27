@@ -9,7 +9,6 @@ import { useQuery } from "@tanstack/react-query"
 import type { Structure } from "../../../../../server/src/types/structure"
 
 const { VITE_PAYSAGE_URL } = import.meta.env
-console.log("VITE_PAYSAGE_URL", import.meta)
 
 export default function Structures() {
   const { data: structures, isError, isLoading } = useQuery<Structure[]>({
